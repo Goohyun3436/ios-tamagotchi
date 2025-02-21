@@ -47,6 +47,10 @@ final class MainViewController: BaseViewController {
                 )
             }
             .disposed(by: disposeBag)
+        
+        
+        mainView.bubbleImageView.image = UIImage(named: "bubble")
+        mainView.bubbleLabel.text = "대장님 오늘 과제 하셨어용?"
     }
     
 }
