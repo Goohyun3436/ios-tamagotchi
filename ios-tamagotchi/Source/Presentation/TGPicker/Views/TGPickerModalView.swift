@@ -33,9 +33,13 @@ final class TGPickerModalView: BaseView {
     }
     
     override func setupConstraints() {
+        let modalHMargin: Double = 50
+        let modalHInset: Double = 40
+        let dividerVMargin: Double = 24
+        
         wrap.snp.makeConstraints { make in
             make.center.equalTo(safeAreaLayoutGuide)
-            make.horizontalEdges.equalTo(safeAreaLayoutGuide).inset(50)
+            make.horizontalEdges.equalTo(safeAreaLayoutGuide).inset(modalHMargin)
         }
         
         tgThumbnailView.snp.makeConstraints { make in
@@ -45,14 +49,14 @@ final class TGPickerModalView: BaseView {
         }
         
         divider.snp.makeConstraints { make in
-            make.top.equalTo(tgThumbnailView.snp.bottom).offset(24)
-            make.bottom.equalTo(introLabel.snp.top).offset(-24)
-            make.horizontalEdges.equalToSuperview().inset(30)
+            make.top.equalTo(tgThumbnailView.snp.bottom).offset(dividerVMargin)
+            make.bottom.equalTo(introLabel.snp.top).offset(-dividerVMargin)
+            make.horizontalEdges.equalToSuperview().inset(modalHInset)
             make.height.equalTo(1)
         }
         
         introLabel.snp.makeConstraints { make in
-            make.horizontalEdges.equalToSuperview().inset(30)
+            make.horizontalEdges.equalToSuperview().inset(modalHInset)
         }
         
         buttonWrap.snp.makeConstraints { make in
@@ -72,13 +76,13 @@ final class TGPickerModalView: BaseView {
         wrap.backgroundColor = AppColor.backgroundColor
         introLabel.numberOfLines = 0
         introLabel.textAlignment = .center
-        introLabel.font = UIFont.systemFont(ofSize: 12, weight: .medium)
-        cancelButton.backgroundColor = AppColor.secondaryBackgroundColor
+        introLabel.font = UIFont.systemFont(ofSize: 13, weight: .medium)
+        cancelButton.backgroundColor = AppColor.tertiaryBackground
         cancelButton.setTitleColor(AppColor.label, for: .normal)
-        cancelButton.titleLabel?.font = UIFont.systemFont(ofSize: 13, weight: .semibold)
+        cancelButton.titleLabel?.font = UIFont.systemFont(ofSize: 14, weight: .semibold)
         startButton.backgroundColor = AppColor.backgroundColor
         startButton.setTitleColor(AppColor.label, for: .normal)
-        startButton.titleLabel?.font = UIFont.systemFont(ofSize: 13, weight: .semibold)
+        startButton.titleLabel?.font = UIFont.systemFont(ofSize: 14, weight: .semibold)
     }
     
 }

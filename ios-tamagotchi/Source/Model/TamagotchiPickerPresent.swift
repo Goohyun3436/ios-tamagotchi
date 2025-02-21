@@ -8,6 +8,8 @@
 import Foundation
 
 struct TamagotchiThumbnail {
+    let id: Int
     let image: String
     let name: String
+    let intro: String
 }

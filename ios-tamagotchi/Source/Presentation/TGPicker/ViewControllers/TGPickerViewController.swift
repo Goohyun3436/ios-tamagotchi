@@ -27,14 +27,16 @@ class TGPickerViewController: BaseViewController {
     
     //MARK: - Setup Method    
     override func setupBind() {
-        let input = TGPickerViewModel.Input()
+        let input = TGPickerViewModel.Input(
+            tamagotchiTap: mainView.collectionView.rx.modelSelected(TamagotchiThumbnail.self)
+        )
         let output = viewModel.transform(input: input)
         
         output.navigationTitle
             .bind(to: navigationItem.rx.title)
             .disposed(by: disposeBag)
         
-        output.items
+        output.tamagotchis
             .bind(
                 to: mainView.collectionView.rx.items(
                     cellIdentifier: TGCollectionViewCell.id,
@@ -45,6 +47,20 @@ class TGPickerViewController: BaseViewController {
                 }
             )
             .disposed(by: disposeBag)
+        
+        output.presentVC
+            .bind(with: self) { owner, tamagotchi in
+                owner.presentModal(tamagotchi)
+            }
+            .disposed(by: disposeBag)
+    }
+    
+    private func presentModal(_ tamagotchi: TamagotchiThumbnail) {
+        let vc = TGPickerModalViewController(
+            tamagotchi: tamagotchi
+        )
+        vc.modalPresentationStyle = .overCurrentContext
+        present(vc, animated: true)
     }
     
 }

@@ -21,17 +21,18 @@ final class TGPickerView: BaseView {
     private func layout() -> UICollectionViewFlowLayout {
         let layout = UICollectionViewFlowLayout()
         
-        let inset: CGFloat = 24
-        let spacing: CGFloat = 32
+        let inset: CGFloat = 16
+        let hSpacing: CGFloat = 14
+        let vSpacing: CGFloat = 28
         let cellPerRow: CGFloat = 3
-        let width: CGFloat = (UIScreen.main.bounds.width - inset * 2 - spacing * (cellPerRow - 1)) / cellPerRow
-        let height: CGFloat = width + 30
+        let width: CGFloat = (UIScreen.main.bounds.width - inset * 2 - hSpacing * (cellPerRow - 1)) / cellPerRow
+        let height: CGFloat = width * 0.85 + 28
         
         layout.scrollDirection = .vertical
         layout.itemSize = CGSize(width: width, height: height)
         layout.sectionInset = UIEdgeInsets(top: inset, left: inset, bottom: inset, right: inset)
-        layout.minimumLineSpacing = spacing
-        layout.minimumInteritemSpacing = spacing
+        layout.minimumInteritemSpacing = hSpacing
+        layout.minimumLineSpacing = vSpacing
         
         return layout
     }

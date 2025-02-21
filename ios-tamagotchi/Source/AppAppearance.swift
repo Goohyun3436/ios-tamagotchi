@@ -10,6 +10,7 @@ import UIKit
 enum AppColor {
     static let backgroundColor = UIColor.appBackground
     static let secondaryBackgroundColor = UIColor.appSecondaryBackground
+    static let tertiaryBackground = UIColor.appTertiaryBackground
     static let overlay = UIColor.appOverlay
     static let label = UIColor.appLabel
     static let black = UIColor.black

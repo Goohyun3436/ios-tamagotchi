@@ -16,6 +16,12 @@ class TGPickerModalViewController: BaseViewController {
     private let viewModel = TGPickerModalViewModel()
     private let disposeBag = DisposeBag()
     
+    //MARK: - Initializer Method
+    init(tamagotchi: TamagotchiThumbnail) {
+        super.init(nibName: nil, bundle: nil)
+        setupBind(tamagotchi)
+    }
+    
     //MARK: - Override Method
     override func loadView() {
         view = mainView
@@ -26,14 +32,55 @@ class TGPickerModalViewController: BaseViewController {
     }
     
     //MARK: - Setup Method
-    override func setupActions() {}
+    private func setupBind(_ tamagotchi: TamagotchiThumbnail) {
+        let input = TGPickerModalViewModel.Input(
+            tamagotchi: tamagotchi,
+            cancelButtonTap: mainView.cancelButton.rx.tap,
+            startButtonTap: mainView.startButton.rx.tap
+        )
+        let output = viewModel.transform(input: input)
+        
+        output.image
+            .bind(with: self) { owner, image in
+                owner.mainView.tgThumbnailView.imageView.image = UIImage(named: image)
+            }
+            .disposed(by: disposeBag)
+        
+        output.name
+            .bind(to: mainView.tgThumbnailView.nameLabel.rx.text)
+            .disposed(by: disposeBag)
+        
+        output.intro
+            .bind(to: mainView.introLabel.rx.text)
+            .disposed(by: disposeBag)
+        
+        output.cancelButtonTitle
+            .bind(to: mainView.cancelButton.rx.title())
+            .disposed(by: disposeBag)
+        
+        output.startButtonTitle
+            .bind(to: mainView.startButton.rx.title())
+            .disposed(by: disposeBag)
+        
+        output.dismissVC
+            .bind(with: self) { owner, _ in
+                owner.dismiss(animated: true)
+            }
+            .disposed(by: disposeBag)
+        
+        output.pushVC
+            .bind(with: self) { owner, _ in
+                owner.moveToMain()
+            }
+            .disposed(by: disposeBag)
+    }
     
-    override func setupBind() {
-        mainView.tgThumbnailView.imageView.image = UIImage(named: "1-1")
-        mainView.tgThumbnailView.nameLabel.text = "  테스트 다마고치  "
-        mainView.introLabel.text = "저는 방실방실 다마고치입니당 키는 100km 몸무게는 150톤이에용\n성격은 화끈하고 날라다닙니당~!\n열심히 잘 먹고 잘 클 자신은 있답니당 방실방실!"
-        mainView.cancelButton.setTitle("취소", for: .normal)
-        mainView.startButton.setTitle("시작하기", for: .normal)
+    private func moveToMain() {
+        guard let scene = UIApplication.shared.connectedScenes.first as? UIWindowScene,
+              let window = scene.windows.first
+        else { return }
+
+        window.rootViewController = MainViewController()
     }
     
 }

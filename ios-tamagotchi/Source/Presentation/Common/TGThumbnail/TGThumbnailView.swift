@@ -24,8 +24,9 @@ final class TGThumbnailView: BaseView {
     override func setupConstraints() {
         imageView.snp.makeConstraints { make in
             make.top.equalToSuperview()
-            make.width.equalToSuperview()
-            make.height.equalTo(imageView.snp.width).multipliedBy(1.0 / 1.0)
+            make.centerX.equalToSuperview()
+            make.width.equalToSuperview().multipliedBy(0.85)
+            make.height.equalTo(imageView.snp.width).multipliedBy(1.0)
         }
         
         nameLabel.snp.makeConstraints { make in
@@ -44,8 +45,8 @@ final class TGThumbnailView: BaseView {
         nameLabel.layer.cornerRadius = 4
         nameLabel.layer.borderWidth = 1
         nameLabel.layer.borderColor = AppColor.label.cgColor
-        nameLabel.backgroundColor = AppColor.backgroundColor
+        nameLabel.backgroundColor = AppColor.secondaryBackgroundColor
         nameLabel.textColor = AppColor.label
-        nameLabel.font = UIFont.systemFont(ofSize: 12, weight: .semibold)
+        nameLabel.font = UIFont.systemFont(ofSize: 13, weight: .bold)
     }
 }

@@ -7,7 +7,7 @@
 
 import UIKit
 
-private class MainViewController: BaseViewController {
+final class MainViewController: BaseViewController {
     
     //MARK: - Property
     private let mainView = MainView()
