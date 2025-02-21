@@ -25,12 +25,12 @@ final class AppAppearance {
         let appearanceN = UINavigationBarAppearance()
         appearanceN.configureWithTransparentBackground()
         appearanceN.backgroundColor = AppColor.backgroundColor
-        appearanceN.titleTextAttributes = [.foregroundColor: AppColor.black, .font: UIFont.systemFont(ofSize: 15, weight: .bold)]
-        appearanceN.largeTitleTextAttributes = [.foregroundColor: AppColor.black]
+        appearanceN.titleTextAttributes = [.foregroundColor: AppColor.label, .font: UIFont.systemFont(ofSize: 15, weight: .bold)]
+        appearanceN.largeTitleTextAttributes = [.foregroundColor: AppColor.label]
         UINavigationBar.appearance().standardAppearance = appearanceN
         UINavigationBar.appearance().scrollEdgeAppearance = appearanceN
         
-        UIBarButtonItem.appearance().tintColor = AppColor.black
+        UIBarButtonItem.appearance().tintColor = AppColor.label
         
         BaseView.appearance().backgroundColor = AppColor.backgroundColor
         
