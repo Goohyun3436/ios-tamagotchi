@@ -9,6 +9,8 @@ import UIKit
 
 enum AppColor {
     static let backgroundColor = UIColor.appBackground
+    static let secondaryBackgroundColor = UIColor.appSecondaryBackground
+    static let overlay = UIColor.appOverlay
     static let label = UIColor.appLabel
     static let black = UIColor.black
     static let white = UIColor.white
@@ -21,7 +23,7 @@ final class AppAppearance {
     static func setupAppearance() {
         let appearanceN = UINavigationBarAppearance()
         appearanceN.configureWithTransparentBackground()
-        appearanceN.backgroundColor = AppColor.white
+        appearanceN.backgroundColor = AppColor.backgroundColor
         appearanceN.titleTextAttributes = [.foregroundColor: AppColor.black, .font: UIFont.systemFont(ofSize: 15, weight: .bold)]
         appearanceN.largeTitleTextAttributes = [.foregroundColor: AppColor.black]
         UINavigationBar.appearance().standardAppearance = appearanceN
@@ -35,7 +37,10 @@ final class AppAppearance {
         
         UITableView.appearance().bounces = false
         UITableView.appearance().separatorStyle = .none
-        UITableView.appearance().backgroundColor = AppColor.white
+        UITableView.appearance().backgroundColor = AppColor.backgroundColor
+        
+        UICollectionView.appearance().bounces = false
+        UICollectionView.appearance().backgroundColor = AppColor.backgroundColor
     }
     
 }

@@ -20,7 +20,8 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         
         window = UIWindow(windowScene: scene)
         
-        window?.rootViewController = UINavigationController(rootViewController: TamagotchiPickerViewController())
+//        window?.rootViewController = UINavigationController(rootViewController: TGPickerViewController())
+        window?.rootViewController = TGPickerModalViewController()
         
         window?.makeKeyAndVisible()
     }

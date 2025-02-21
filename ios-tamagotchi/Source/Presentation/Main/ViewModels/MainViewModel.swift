@@ -22,6 +22,8 @@ final class MainViewModel: BaseViewModel {
     private let priv = Private()
     
     //MARK: - Method
-    func transform() {}
+    func transform(input: Input) -> Output {
+        return Output()
+    }
     
 }

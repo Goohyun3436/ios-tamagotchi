@@ -18,7 +18,8 @@ class BaseViewController: UIViewController {
     func setupActions() {}
     
     func setupBind() {}
-        
+    
+    @available(*, unavailable)
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
