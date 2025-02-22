@@ -22,6 +22,9 @@ final class MainViewModel: BaseViewModel {
         let navigationTitle: BehaviorRelay<String>
         let rightBarButtonImage: Observable<String>
         let bubbleText: PublishRelay<String>
+        let tgImage: BehaviorRelay<String>
+        let tgName: BehaviorRelay<String>
+        let tgInfo: BehaviorRelay<String>
         let pushVC: PublishRelay<Void>
     }
     
@@ -49,6 +52,9 @@ final class MainViewModel: BaseViewModel {
         let navigationTitle = BehaviorRelay(value: priv.navigationTitle)
         let rightBarButtonImage = Observable.just(priv.rightBarButtonImage)
         let bubbleText = PublishRelay<String>()
+        let tgImage = BehaviorRelay(value: priv.tamagotchi.image)
+        let tgName = BehaviorRelay(value: priv.tamagotchi.name)
+        let tgInfo = BehaviorRelay(value: priv.tamagotchi.info)
         let pushVC = PublishRelay<Void>()
         
         input.viewWillAppear
@@ -68,6 +74,9 @@ final class MainViewModel: BaseViewModel {
             navigationTitle: navigationTitle,
             rightBarButtonImage: rightBarButtonImage,
             bubbleText: bubbleText,
+            tgImage: tgImage,
+            tgName: tgName,
+            tgInfo: tgInfo,
             pushVC: pushVC
         )
     }

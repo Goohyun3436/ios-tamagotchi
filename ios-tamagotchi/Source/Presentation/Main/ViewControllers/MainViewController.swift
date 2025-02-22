@@ -52,17 +52,25 @@ final class MainViewController: BaseViewController {
             .bind(to: mainView.bubbleLabel.rx.text)
             .disposed(by: disposeBag)
         
+        output.tgImage
+            .bind(with: self) { owner, image in
+                owner.mainView.tgThumbnailView.imageView.image = UIImage(named: image)
+            }
+            .disposed(by: disposeBag)
+        
+        output.tgName
+            .bind(to: mainView.tgThumbnailView.nameLabel.rx.text)
+            .disposed(by: disposeBag)
+        
+        output.tgInfo
+            .bind(to: mainView.tgInfoLabel.rx.text)
+            .disposed(by: disposeBag)
+        
         output.pushVC
             .bind(with: self) { owner, _ in
                 owner.moveToSetting()
             }
             .disposed(by: disposeBag)
-        
-        
-        mainView.bubbleImageView.image = UIImage(named: "bubble")
-        mainView.tgThumbnailView.imageView.image = UIImage(named: "1-1")
-        mainView.tgThumbnailView.nameLabel.text = "  따끔따끔 다마고치  "
-        mainView.tgExpLabel.text = "LV10 · 밥알 8888888888888888개 · 물방울 888888888888888888888888개"
     }
     
     private func moveToSetting() {

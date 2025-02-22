@@ -11,10 +11,10 @@ import SnapKit
 final class MainView: BaseView {
     
     //MARK: - UI Property
-    let bubbleImageView = UIImageView()
+    let bubbleImageView = UIImageView(image: UIImage(named: "bubble"))
     let bubbleLabel = UILabel()
     let tgThumbnailView = TGThumbnailView()
-    let tgExpLabel = UILabel()
+    let tgInfoLabel = UILabel()
     private let formWrap = UIStackView()
     let riceForm = FeedFormView(feedType: .rice)
     let waterForm = FeedFormView(feedType: .water)
@@ -32,7 +32,7 @@ final class MainView: BaseView {
             formWrap.addArrangedSubview($0)
         }
         
-        [bubbleImageView, tgThumbnailView, tgExpLabel, formWrap].forEach {
+        [bubbleImageView, tgThumbnailView, tgInfoLabel, formWrap].forEach {
             addSubview($0)
         }
     }
@@ -67,13 +67,13 @@ final class MainView: BaseView {
             make.width.equalTo(bubbleWidth)
         }
         
-        tgExpLabel.snp.makeConstraints { make in
+        tgInfoLabel.snp.makeConstraints { make in
             make.top.equalTo(tgThumbnailView.snp.bottom).offset(16)
             make.horizontalEdges.equalToSuperview().inset(16)
         }
         
         formWrap.snp.makeConstraints { make in
-            make.top.equalTo(tgExpLabel.snp.bottom).offset(30)
+            make.top.equalTo(tgInfoLabel.snp.bottom).offset(30)
             make.centerX.equalToSuperview()
             make.width.equalTo(bubbleWidth)
             make.height.equalTo(formHeight * 2 + formMargin)
@@ -93,9 +93,9 @@ final class MainView: BaseView {
         bubbleImageView.contentMode = .scaleAspectFit
         bubbleLabel.numberOfLines = 0
         bubbleLabel.font = UIFont.systemFont(ofSize: 13, weight: .bold)
-        tgExpLabel.numberOfLines = 0
-        tgExpLabel.textAlignment = .center
-        tgExpLabel.font = UIFont.systemFont(ofSize: 13, weight: .bold)
+        tgInfoLabel.numberOfLines = 0
+        tgInfoLabel.textAlignment = .center
+        tgInfoLabel.font = UIFont.systemFont(ofSize: 13, weight: .bold)
     }
     
 }

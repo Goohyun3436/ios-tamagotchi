@@ -76,11 +76,31 @@ enum TamagotchiType: String, CaseIterable {
     }
 }
 
+fileprivate let levelRange = [1, 10]
+
 struct Tamagotchi: Codable {
     var id: Int = TamagotchiType.empty.index
+    var image: String = ""
+    var name: String = ""
     var rice: Int = 0
     var water: Int = 0
-    var exp: Int {
-        return rice / 5 + water / 2
+    var exp: Double {
+        return Double(rice) / 5 + Double(water) / 2
+    }
+    var level: Int {
+        let updatedLevel = Int(exp / 10)
+        
+        guard updatedLevel >= levelRange[0] else {
+            return levelRange[0]
+        }
+        
+        guard updatedLevel <= levelRange[1] else {
+            return levelRange[1]
+        }
+        
+        return updatedLevel
+    }
+    var info: String {
+        return "LV\(level) · 밥알 \(rice)개 · 물방울 \(water)개"
     }
 }
