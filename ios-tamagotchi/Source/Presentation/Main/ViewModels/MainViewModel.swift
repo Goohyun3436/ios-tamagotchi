@@ -16,6 +16,7 @@ final class MainViewModel: BaseViewModel {
         let viewDidLoad: ControlEvent<Void>
         let viewWillAppear: ControlEvent<Bool>
         let rightBarButtonTap: ControlEvent<()>?
+        let riceText: ControlProperty<String?>
         let riceButtonTap: ControlEvent<Void>
         let waterButtonTap: ControlEvent<Void>
     }
@@ -89,8 +90,9 @@ final class MainViewModel: BaseViewModel {
             .disposed(by: priv.disposeBag)
         
         input.riceButtonTap
-            .bind(with: self) { owner, _ in
-                owner.updateFeed(for: .rice, input: "1")
+            .withLatestFrom(input.riceText)
+            .bind(with: self) { owner, text in
+                owner.updateFeed(for: .rice, input: text)
             }
             .disposed(by: priv.disposeBag)
         
