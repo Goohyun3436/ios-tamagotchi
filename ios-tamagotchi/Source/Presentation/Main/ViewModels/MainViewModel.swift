@@ -12,12 +12,14 @@ import RxCocoa
 final class MainViewModel: BaseViewModel {
     
     //MARK: - Input
-    struct Input {}
+    struct Input {
+    }
     
     //MARK: - Output
     struct Output {
         let navigationTitle: BehaviorRelay<String>
         let rightBarButtonImage: Observable<String>
+        let bubbleText: PublishRelay<String>
     }
     
     //MARK: - Private
@@ -42,10 +44,12 @@ final class MainViewModel: BaseViewModel {
     func transform(input: Input) -> Output {
         let navigationTitle = BehaviorRelay(value: priv.navigationTitle)
         let rightBarButtonImage = Observable.just(priv.rightBarButtonImage)
+        let bubbleText = PublishRelay<String>()
         
         return Output(
             navigationTitle: navigationTitle,
-            rightBarButtonImage: rightBarButtonImage
+            rightBarButtonImage: rightBarButtonImage,
+            bubbleText: bubbleText
         )
     }
     

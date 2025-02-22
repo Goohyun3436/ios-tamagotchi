@@ -25,6 +25,10 @@ final class MainViewController: BaseViewController {
         super.viewDidLoad()
     }
     
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+    }
+    
     //MARK: - Setup Method
     override func setupActions() {
     }

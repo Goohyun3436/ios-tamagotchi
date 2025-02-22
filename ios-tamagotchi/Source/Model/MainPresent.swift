@@ -28,3 +28,9 @@ enum FeedType: String {
         return " \(self.rawValue)먹기"
     }
 }
+
+enum BubbleUpdateType {
+    case enterView
+    case rice
+    case water
+}
