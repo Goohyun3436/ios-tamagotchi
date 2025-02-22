@@ -73,9 +73,13 @@ final class MainViewModel: BaseViewModel {
         input.riceButtonTap
             .bind(with: self) { owner, _ in
                 TGStorage.shared.info.rice += 1
-                owner.setTamagotchi()
+                
                 //refactor point: priv.tamagotchi를 Observable로 관리
+                owner.setTamagotchi()
                 tgInfo.accept(owner.priv.tamagotchi.info)
+                
+                let text = owner.updateBubble(for: .rice)
+                bubbleText.accept(text)
             }
             .disposed(by: priv.disposeBag)
         
