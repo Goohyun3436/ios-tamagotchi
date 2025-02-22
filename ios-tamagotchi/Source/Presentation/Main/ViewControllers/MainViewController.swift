@@ -20,6 +20,7 @@ final class MainViewController: BaseViewController {
     //MARK: - Override Method
     override func loadView() {
         view = mainView
+        navigationItem.backButtonTitle = ""
     }
     
     override func viewDidLoad() {
