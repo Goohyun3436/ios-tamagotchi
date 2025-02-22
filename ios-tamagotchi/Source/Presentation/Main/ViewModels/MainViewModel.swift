@@ -30,7 +30,7 @@ final class MainViewModel: BaseViewModel {
     
     //MARK: - Output
     struct Output {
-        let navigationTitle: BehaviorRelay<String>
+        let navigationTitle: PublishRelay<String>
         let rightBarButtonImage: Observable<String>
         let bubbleText: PublishRelay<String>
         let tgImage: PublishRelay<String>
@@ -43,11 +43,10 @@ final class MainViewModel: BaseViewModel {
     
     //MARK: - Private
     private struct Private {
-        var navigationTitle = ""
         let rightBarButtonImage = "person.circle"
-        var user = User()
-        let bubbleText = PublishRelay<String>()
+        var user = BehaviorRelay(value: User())
         let tamagotchi = PublishRelay<Tamagotchi>()
+        let bubbleText = PublishRelay<String>()
         let transformView = PublishRelay<(TimeInterval, CGAffineTransform)>()
         let disposeBag = DisposeBag()
     }
@@ -55,15 +54,9 @@ final class MainViewModel: BaseViewModel {
     //MARK: - Property
     private var priv = Private()
     
-    //MARK: - Initializer Method
-    init() {
-        setUser()
-        priv.navigationTitle = "\(priv.user.nickname)님의 다마고치"
-    }
-    
     //MARK: - Method
     func transform(input: Input) -> Output {
-        let navigationTitle = BehaviorRelay(value: priv.navigationTitle)
+        let navigationTitle = PublishRelay<String>()
         let rightBarButtonImage = Observable.just(priv.rightBarButtonImage)
         let bubbleText = PublishRelay<String>()
         let tgImage = PublishRelay<String>()
@@ -73,8 +66,9 @@ final class MainViewModel: BaseViewModel {
         let transformView = PublishRelay<(TimeInterval, CGAffineTransform)>()
         let pushVC = PublishRelay<Void>()
         
-        priv.bubbleText
-            .bind(to: bubbleText)
+        priv.user
+            .map { "\($0.nickname)님의 다마고치" }
+            .bind(to: navigationTitle)
             .disposed(by: priv.disposeBag)
         
         priv.tamagotchi
@@ -85,12 +79,17 @@ final class MainViewModel: BaseViewModel {
             }
             .disposed(by: priv.disposeBag)
         
+        priv.bubbleText
+            .bind(to: bubbleText)
+            .disposed(by: priv.disposeBag)
+        
         priv.transformView
             .bind(to: transformView)
             .disposed(by: priv.disposeBag)
         
         input.viewDidLoad
             .bind(with: self) { owner, _ in
+                owner.setUser()
                 owner.setTamagotchi()
             }
             .disposed(by: priv.disposeBag)
@@ -163,7 +162,7 @@ final class MainViewModel: BaseViewModel {
     }
     
     private func setUser() {
-        self.priv.user = UserStaticStorage.info
+        self.priv.user.accept(UserStaticStorage.info)
     }
     
     private func setTamagotchi() {
@@ -171,7 +170,7 @@ final class MainViewModel: BaseViewModel {
     }
     
     private func updateBubble(for bubbleUpdate: BubbleUpdate) -> String {
-        return bubbleUpdate.message(nickname: priv.user.nickname)
+        return bubbleUpdate.message(nickname: priv.user.value.nickname)
     }
     
     private func updateFeed(for feedType: FeedType, input: String?) {
