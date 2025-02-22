@@ -23,6 +23,8 @@ final class MainViewController: BaseViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        mainView.riceForm.textField.delegate = self
+        mainView.waterForm.textField.delegate = self
     }
     
     //MARK: - Setup Method
@@ -31,6 +33,8 @@ final class MainViewController: BaseViewController {
     
     override func setupBind() {
         navigationItem.rightBarButtonItem = UIBarButtonItem()
+        let singleTap = UITapGestureRecognizer()
+        mainView.addGestureRecognizer(singleTap)
         
         let input = MainViewModel.Input(
             viewDidLoad: rx.viewDidLoad,
@@ -42,6 +46,9 @@ final class MainViewController: BaseViewController {
             waterButtonTap: mainView.waterForm.button.rx.tap
         )
         let output = viewModel.transform(input: input)
+        
+        mainView.rx.gesture
+        let a = singleTap.rx.tap
         
         output.navigationTitle
             .bind(to: navigationItem.rx.title)
@@ -83,6 +90,25 @@ final class MainViewController: BaseViewController {
             SettingViewController(),
             animated: true
         )
+    }
+    
+}
+
+//MARK: - UITextFieldDelegate
+extension MainViewController: UITextFieldDelegate {
+    
+    func textFieldDidBeginEditing(_ textField: UITextField) {
+        UIView.animate(withDuration: 0.3) {
+            let transform = CGAffineTransform(translationX: 0, y: -200)
+            self.view.transform = transform
+        }
+    }
+    
+    func textFieldDidEndEditing(_ textField: UITextField) {
+        UIView.animate(withDuration: 0.3) {
+            let transform = CGAffineTransform(translationX: 0, y: 0)
+            self.view.transform = transform
+        }
     }
     
 }

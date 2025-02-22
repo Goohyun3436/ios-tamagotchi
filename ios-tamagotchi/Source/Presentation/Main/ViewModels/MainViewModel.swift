@@ -20,6 +20,7 @@ final class MainViewModel: BaseViewModel {
         let waterText: ControlProperty<String?>
         let riceButtonTap: ControlEvent<Void>
         let waterButtonTap: ControlEvent<Void>
+        let mainViewTap: 
     }
     
     //MARK: - Output

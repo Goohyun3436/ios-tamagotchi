@@ -90,6 +90,7 @@ final class MainView: BaseView {
     }
     
     override func setupAttributes() {
+        self.isUserInteractionEnabled = true
         bubbleImageView.contentMode = .scaleAspectFit
         bubbleLabel.numberOfLines = 0
         bubbleLabel.textAlignment = .center

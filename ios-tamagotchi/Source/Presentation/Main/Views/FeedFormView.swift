@@ -13,8 +13,8 @@ final class FeedFormView: UIStackView {
     var button: FeedButton
     
     init(feedType: FeedType) {
-        textField = FeedTextField(feedType: feedType)
-        button = FeedButton(feedType: feedType)
+        self.textField = FeedTextField(feedType: feedType)
+        self.button = FeedButton(feedType: feedType)
         
         //refactor point: super.init 호출 전에 인스턴스 프로퍼티 초기화 해줘도 되는지 확인 필요
         super.init(frame: .zero)
@@ -25,6 +25,7 @@ final class FeedFormView: UIStackView {
         
         self.axis = .horizontal
         self.spacing = 16
+        self.textField.keyboardType = .numberPad
     }
     
     required init(coder: NSCoder) {
