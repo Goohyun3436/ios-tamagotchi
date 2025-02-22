@@ -23,8 +23,6 @@ final class SettingViewController: BaseViewController {
     }
     
     //MARK: - Setup Method
-    override func setupActions() {}
-    
     override func setupBind() {}
     
 }

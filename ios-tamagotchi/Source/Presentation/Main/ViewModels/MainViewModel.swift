@@ -58,6 +58,10 @@ final class MainViewModel: BaseViewModel {
     //MARK: - Property
     private var priv = Private()
     
+    deinit {
+        print(self, #function)
+    }
+    
     //MARK: - Method
     func transform(input: Input) -> Output {
         let navigationTitle = PublishRelay<String>()

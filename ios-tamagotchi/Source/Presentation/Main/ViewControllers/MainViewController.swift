@@ -27,10 +27,11 @@ final class MainViewController: BaseViewController {
         super.viewDidLoad()
     }
     
-    //MARK: - Setup Method
-    override func setupActions() {
+    deinit {
+        print(self, #function)
     }
     
+    //MARK: - Setup Method    
     override func setupBind() {
         navigationItem.rightBarButtonItem = UIBarButtonItem()
         
@@ -113,10 +114,17 @@ final class MainViewController: BaseViewController {
     }
     
     private func moveToSetting() {
-        navigationController?.pushViewController(
-            SettingViewController(),
-            animated: true
-        )
+        
+        guard let scene = UIApplication.shared.connectedScenes.first as? UIWindowScene,
+              let window = scene.windows.first
+        else { return }
+
+        window.rootViewController = SettingViewController()
+        
+//        navigationController?.pushViewController(
+//            SettingViewController(),
+//            animated: true
+//        )
     }
     
     private func animationView(_ config: (TimeInterval, CGAffineTransform)) {
