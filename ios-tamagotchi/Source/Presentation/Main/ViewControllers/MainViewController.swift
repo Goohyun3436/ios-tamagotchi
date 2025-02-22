@@ -24,8 +24,6 @@ final class MainViewController: BaseViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        mainView.riceForm.textField.delegate = self
-        mainView.waterForm.textField.delegate = self
     }
     
     //MARK: - Setup Method
@@ -43,10 +41,11 @@ final class MainViewController: BaseViewController {
             waterText: mainView.waterForm.textField.rx.text,
             riceButtonTap: mainView.riceForm.button.rx.tap,
             waterButtonTap: mainView.waterForm.button.rx.tap,
-            mainViewTapOrSwipe: mainView.rx.anyGesture(.tap(
-                configuration: { rec, _ in
-                    rec.cancelsTouchesInView = false
-                }), .swipe(direction: .down))
+            riceDidBeginEditing: mainView.riceForm.textField.rx.controlEvent(.editingDidBegin),
+            waterDidBeginEditing: mainView.waterForm.textField.rx.controlEvent(.editingDidBegin),
+            riceDidEndEditing: mainView.riceForm.textField.rx.controlEvent(.editingDidEnd),
+            waterDidEndEditing: mainView.waterForm.textField.rx.controlEvent(.editingDidEnd),
+            mainViewTapOrSwipe: mainView.rx.anyGesture(.tap(), .swipe(direction: .down))
         )
         let output = viewModel.transform(input: input)
         
@@ -84,6 +83,12 @@ final class MainViewController: BaseViewController {
             }
             .disposed(by: disposeBag)
         
+        output.transformView
+            .bind(with: self) { owner, config in
+                owner.animationView(config)
+            }
+            .disposed(by: disposeBag)
+        
         output.pushVC
             .bind(with: self) { owner, _ in
                 owner.moveToSetting()
@@ -98,21 +103,10 @@ final class MainViewController: BaseViewController {
         )
     }
     
-}
-
-//MARK: - UITextFieldDelegate
-extension MainViewController: UITextFieldDelegate {
-    
-    func textFieldDidBeginEditing(_ textField: UITextField) {
-        UIView.animate(withDuration: 0.3) {
-            let transform = CGAffineTransform(translationX: 0, y: -200)
-            self.view.transform = transform
-        }
-    }
-    
-    func textFieldDidEndEditing(_ textField: UITextField) {
-        UIView.animate(withDuration: 0.3) {
-            let transform = CGAffineTransform(translationX: 0, y: 0)
+    private func animationView(_ config: (TimeInterval, CGAffineTransform)) {
+        let (duration, transform) = config
+        
+        UIView.animate(withDuration: duration) {
             self.view.transform = transform
         }
     }

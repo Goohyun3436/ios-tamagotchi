@@ -21,6 +21,10 @@ final class MainViewModel: BaseViewModel {
         let waterText: ControlProperty<String?>
         let riceButtonTap: ControlEvent<Void>
         let waterButtonTap: ControlEvent<Void>
+        let riceDidBeginEditing: ControlEvent<()>
+        let waterDidBeginEditing: ControlEvent<()>
+        let riceDidEndEditing: ControlEvent<()>
+        let waterDidEndEditing: ControlEvent<()>
         let mainViewTapOrSwipe: ControlEvent<RxGestureRecognizer>
     }
     
@@ -33,6 +37,7 @@ final class MainViewModel: BaseViewModel {
         let tgName: PublishRelay<String>
         let tgInfo: PublishRelay<String>
         let showsKeyboard: PublishRelay<Bool>
+        let transformView: PublishRelay<(TimeInterval, CGAffineTransform)>
         let pushVC: PublishRelay<Void>
     }
     
@@ -43,6 +48,7 @@ final class MainViewModel: BaseViewModel {
         var user = User()
         let bubbleText = PublishRelay<String>()
         let tamagotchi = PublishRelay<Tamagotchi>()
+        let transformView = PublishRelay<(TimeInterval, CGAffineTransform)>()
         let disposeBag = DisposeBag()
     }
     
@@ -64,6 +70,7 @@ final class MainViewModel: BaseViewModel {
         let tgName = PublishRelay<String>()
         let tgInfo = PublishRelay<String>()
         let showsKeyboard = PublishRelay<Bool>()
+        let transformView = PublishRelay<(TimeInterval, CGAffineTransform)>()
         let pushVC = PublishRelay<Void>()
         
         priv.bubbleText
@@ -76,6 +83,10 @@ final class MainViewModel: BaseViewModel {
                 tgName.accept(tamagotchi.name)
                 tgInfo.accept(tamagotchi.info)
             }
+            .disposed(by: priv.disposeBag)
+        
+        priv.transformView
+            .bind(to: transformView)
             .disposed(by: priv.disposeBag)
         
         input.viewDidLoad
@@ -108,6 +119,30 @@ final class MainViewModel: BaseViewModel {
             }
             .disposed(by: priv.disposeBag)
         
+        input.riceDidBeginEditing
+            .bind(with: self) { owner, _ in
+                owner.viewUp()
+            }
+            .disposed(by: priv.disposeBag)
+        
+        input.waterDidBeginEditing
+            .bind(with: self) { owner, _ in
+                owner.viewUp()
+            }
+            .disposed(by: priv.disposeBag)
+        
+        input.riceDidEndEditing
+            .bind(with: self) { owner, _ in
+                owner.viewDown()
+            }
+            .disposed(by: priv.disposeBag)
+        
+        input.waterDidEndEditing
+            .bind(with: self) { owner, _ in
+                owner.viewDown()
+            }
+            .disposed(by: priv.disposeBag)
+        
         input.mainViewTapOrSwipe
             .when(.recognized)
             .map { !$0.isEnabled }
@@ -122,16 +157,17 @@ final class MainViewModel: BaseViewModel {
             tgName: tgName,
             tgInfo: tgInfo,
             showsKeyboard: showsKeyboard,
+            transformView: transformView,
             pushVC: pushVC
         )
     }
     
     private func setUser() {
-        priv.user = UserStaticStorage.info
+        self.priv.user = UserStaticStorage.info
     }
     
     private func setTamagotchi() {
-        priv.tamagotchi.accept(TGStaticStorage.info)
+        self.priv.tamagotchi.accept(TGStaticStorage.info)
     }
     
     private func updateBubble(for bubbleUpdate: BubbleUpdate) -> String {
@@ -162,6 +198,18 @@ final class MainViewModel: BaseViewModel {
         
         self.setTamagotchi()
         self.priv.bubbleText.accept(bubbleText)
+    }
+    
+    private func viewUp() {
+        self.priv.transformView.accept((0.3, self.transform(y: -200)))
+    }
+    
+    private func viewDown() {
+        self.priv.transformView.accept((0.3, self.transform(y: 0)))
+    }
+    
+    private func transform(y: CGFloat) -> CGAffineTransform {
+        return CGAffineTransform(translationX: 0, y: y)
     }
     
 }
