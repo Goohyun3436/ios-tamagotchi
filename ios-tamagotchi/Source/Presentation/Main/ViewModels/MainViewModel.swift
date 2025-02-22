@@ -36,6 +36,8 @@ final class MainViewModel: BaseViewModel {
         let tgImage: PublishRelay<String>
         let tgName: PublishRelay<String>
         let tgInfo: PublishRelay<String>
+        let riceText: PublishRelay<String>
+        let waterText: PublishRelay<String>
         let showsKeyboard: PublishRelay<Bool>
         let transformView: PublishRelay<(TimeInterval, CGAffineTransform)>
         let pushVC: PublishRelay<Void>
@@ -62,6 +64,8 @@ final class MainViewModel: BaseViewModel {
         let tgImage = PublishRelay<String>()
         let tgName = PublishRelay<String>()
         let tgInfo = PublishRelay<String>()
+        let riceText = PublishRelay<String>()
+        let waterText = PublishRelay<String>()
         let showsKeyboard = PublishRelay<Bool>()
         let transformView = PublishRelay<(TimeInterval, CGAffineTransform)>()
         let pushVC = PublishRelay<Void>()
@@ -108,6 +112,7 @@ final class MainViewModel: BaseViewModel {
             .withLatestFrom(input.riceText)
             .bind(with: self) { owner, text in
                 owner.updateFeed(for: .rice, input: text)
+                riceText.accept("")
             }
             .disposed(by: priv.disposeBag)
         
@@ -115,6 +120,7 @@ final class MainViewModel: BaseViewModel {
             .withLatestFrom(input.waterText)
             .bind(with: self) { owner, text in
                 owner.updateFeed(for: .water, input: text)
+                waterText.accept("")
             }
             .disposed(by: priv.disposeBag)
         
@@ -155,6 +161,8 @@ final class MainViewModel: BaseViewModel {
             tgImage: tgImage,
             tgName: tgName,
             tgInfo: tgInfo,
+            riceText: riceText,
+            waterText: waterText,
             showsKeyboard: showsKeyboard,
             transformView: transformView,
             pushVC: pushVC

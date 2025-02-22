@@ -77,6 +77,14 @@ final class MainViewController: BaseViewController {
             .bind(to: mainView.tgInfoLabel.rx.text)
             .disposed(by: disposeBag)
         
+        output.riceText
+            .bind(to: mainView.riceForm.textField.rx.text)
+            .disposed(by: disposeBag)
+        
+        output.waterText
+            .bind(to: mainView.waterForm.textField.rx.text)
+            .disposed(by: disposeBag)
+        
         output.showsKeyboard
             .bind(with: self) { owner, show in
                 owner.view.endEditing(show)
