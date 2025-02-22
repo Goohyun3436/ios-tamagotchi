@@ -13,6 +13,8 @@ final class MainViewModel: BaseViewModel {
     
     //MARK: - Input
     struct Input {
+        let viewWillAppear: ControlEvent<Bool>
+        let rightBarButtonTap: ControlEvent<()>?
     }
     
     //MARK: - Output
@@ -20,6 +22,7 @@ final class MainViewModel: BaseViewModel {
         let navigationTitle: BehaviorRelay<String>
         let rightBarButtonImage: Observable<String>
         let bubbleText: PublishRelay<String>
+        let pushVC: PublishRelay<Void>
     }
     
     //MARK: - Private
@@ -28,6 +31,7 @@ final class MainViewModel: BaseViewModel {
         let rightBarButtonImage = "person.circle"
         var user = User()
         var tamagotchi = Tamagotchi()
+        let disposeBag = DisposeBag()
     }
     
     //MARK: - Property
@@ -37,7 +41,7 @@ final class MainViewModel: BaseViewModel {
     init() {
         priv.user = getUser()
         priv.tamagotchi = getTamagotchi()
-        priv.navigationTitle = "\(priv.user.nickname)의 다마고치"
+        priv.navigationTitle = "\(priv.user.nickname)님의 다마고치"
     }
     
     //MARK: - Method
@@ -45,11 +49,26 @@ final class MainViewModel: BaseViewModel {
         let navigationTitle = BehaviorRelay(value: priv.navigationTitle)
         let rightBarButtonImage = Observable.just(priv.rightBarButtonImage)
         let bubbleText = PublishRelay<String>()
+        let pushVC = PublishRelay<Void>()
+        
+        input.viewWillAppear
+            .bind(with: self) { owner, _ in
+                let text = owner.updateBubble(for: .enterView)
+                bubbleText.accept(text)
+            }
+            .disposed(by: priv.disposeBag)
+        
+        input.rightBarButtonTap?
+            .bind(with: self) { owner, _ in
+                pushVC.accept(())
+            }
+            .disposed(by: priv.disposeBag)
         
         return Output(
             navigationTitle: navigationTitle,
             rightBarButtonImage: rightBarButtonImage,
-            bubbleText: bubbleText
+            bubbleText: bubbleText,
+            pushVC: pushVC
         )
     }
     
@@ -59,6 +78,10 @@ final class MainViewModel: BaseViewModel {
     
     private func getTamagotchi() -> Tamagotchi {
         return TGStaticStorage.info
+    }
+    
+    private func updateBubble(for bubbleUpdate: BubbleUpdate) -> String {
+        return bubbleUpdate.message(nickname: priv.user.nickname)
     }
     
 }
