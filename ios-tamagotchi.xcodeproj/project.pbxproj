@@ -11,6 +11,7 @@
 		F8446EED2D67507500DA552E /* RxCocoa in Frameworks */ = {isa = PBXBuildFile; productRef = F8446EEC2D67507500DA552E /* RxCocoa */; };
 		F8446EEF2D67507500DA552E /* RxSwift in Frameworks */ = {isa = PBXBuildFile; productRef = F8446EEE2D67507500DA552E /* RxSwift */; };
 		F8446EF22D67509300DA552E /* SnapKit in Frameworks */ = {isa = PBXBuildFile; productRef = F8446EF12D67509300DA552E /* SnapKit */; };
+		F88DFA472D6A11C600AF6725 /* RxGesture in Frameworks */ = {isa = PBXBuildFile; productRef = F88DFA462D6A11C600AF6725 /* RxGesture */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -46,6 +47,7 @@
 			files = (
 				F8446EF22D67509300DA552E /* SnapKit in Frameworks */,
 				F8446EEF2D67507500DA552E /* RxSwift in Frameworks */,
+				F88DFA472D6A11C600AF6725 /* RxGesture in Frameworks */,
 				F8446EED2D67507500DA552E /* RxCocoa in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -93,6 +95,7 @@
 				F8446EEC2D67507500DA552E /* RxCocoa */,
 				F8446EEE2D67507500DA552E /* RxSwift */,
 				F8446EF12D67509300DA552E /* SnapKit */,
+				F88DFA462D6A11C600AF6725 /* RxGesture */,
 			);
 			productName = "ios-tamagotchi";
 			productReference = F8446E1F2D67397500DA552E /* ios-tamagotchi.app */;
@@ -125,6 +128,7 @@
 			packageReferences = (
 				F8446EEB2D67507500DA552E /* XCRemoteSwiftPackageReference "RxSwift" */,
 				F8446EF02D67509300DA552E /* XCRemoteSwiftPackageReference "SnapKit" */,
+				F88DFA452D6A11C600AF6725 /* XCRemoteSwiftPackageReference "RxGesture" */,
 			);
 			preferredProjectObjectVersion = 77;
 			productRefGroup = F8446E202D67397500DA552E /* Products */;
@@ -385,6 +389,14 @@
 				minimumVersion = 5.7.1;
 			};
 		};
+		F88DFA452D6A11C600AF6725 /* XCRemoteSwiftPackageReference "RxGesture" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/RxSwiftCommunity/RxGesture";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 4.0.4;
+			};
+		};
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
@@ -402,6 +414,11 @@
 			isa = XCSwiftPackageProductDependency;
 			package = F8446EF02D67509300DA552E /* XCRemoteSwiftPackageReference "SnapKit" */;
 			productName = SnapKit;
+		};
+		F88DFA462D6A11C600AF6725 /* RxGesture */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = F88DFA452D6A11C600AF6725 /* XCRemoteSwiftPackageReference "RxGesture" */;
+			productName = RxGesture;
 		};
 /* End XCSwiftPackageProductDependency section */
 	};
