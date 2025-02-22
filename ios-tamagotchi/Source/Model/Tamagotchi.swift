@@ -61,6 +61,11 @@ enum TamagotchiType: String, CaseIterable {
         return "\(self.index + 1)-\(TamagotchiType.level(exp))"
     }
     
+    static func image(id: Int, level: Int) -> String {
+        print("image; \(id + 1)-\(level)")
+        return "\(id + 1)-\(level)"
+    }
+    
     static func level(_ exp: Double) -> Int {
         let updatedLevel = Int(exp / 10)
         print(exp)
@@ -90,15 +95,19 @@ struct Tamagotchi: Codable {
     var id: Int = TamagotchiType.empty.index
     var image: String = ""
     var name: String = ""
-    var rice: Int = 0
-    var water: Int = 0
+    var rice: Int = 0 { didSet { self.updateLevel() } }
+    var water: Int = 0 { didSet { self.updateLevel() } }
+    var level: Int = 0
+    
     var exp: Double {
         return Double(rice) / 5 + Double(water) / 2
     }
-    var level: Int {
-        return TamagotchiType.level(exp)
-    }
     var info: String {
         return "LV\(level) · 밥알 \(rice)개 · 물방울 \(water)개"
+    }
+    
+    mutating func updateLevel() {
+        self.level = TamagotchiType.level(exp)
+        self.image = TamagotchiType.image(id: self.id, level: self.level)
     }
 }

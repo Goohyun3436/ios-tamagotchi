@@ -74,8 +74,9 @@ final class TGPickerModalViewModel: BaseViewModel {
     private func save(_ tamagotchi: TamagotchiThumbnail) {
         let data = Tamagotchi(
             id: tamagotchi.id,
-            image: TamagotchiType.allCases[tamagotchi.id].image(exp: 0),
-            name: tamagotchi.name
+            image: TamagotchiType.image(id: tamagotchi.id, level: 1),
+            name: tamagotchi.name,
+            level: 1
         )
         TGStorage.shared.info = data
     }
