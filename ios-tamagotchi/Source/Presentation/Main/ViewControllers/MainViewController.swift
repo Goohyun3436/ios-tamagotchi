@@ -35,7 +35,8 @@ final class MainViewController: BaseViewController {
         let input = MainViewModel.Input(
             viewWillAppear: rx.viewWillAppear,
             rightBarButtonTap: navigationItem.rightBarButtonItem?.rx.tap,
-            riceButtonTap: mainView.riceForm.button.rx.tap
+            riceButtonTap: mainView.riceForm.button.rx.tap,
+            waterButtonTap: mainView.waterForm.button.rx.tap
         )
         let output = viewModel.transform(input: input)
         

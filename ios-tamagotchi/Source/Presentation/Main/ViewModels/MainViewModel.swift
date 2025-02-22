@@ -16,6 +16,7 @@ final class MainViewModel: BaseViewModel {
         let viewWillAppear: ControlEvent<Bool>
         let rightBarButtonTap: ControlEvent<()>?
         let riceButtonTap: ControlEvent<Void>
+        let waterButtonTap: ControlEvent<Void>
     }
     
     //MARK: - Output
@@ -72,6 +73,15 @@ final class MainViewModel: BaseViewModel {
         input.riceButtonTap
             .bind(with: self) { owner, _ in
                 TGStorage.shared.info.rice += 1
+                owner.setTamagotchi()
+                //refactor point: priv.tamagotchi를 Observable로 관리
+                tgInfo.accept(owner.priv.tamagotchi.info)
+            }
+            .disposed(by: priv.disposeBag)
+        
+        input.waterButtonTap
+            .bind(with: self) { owner, _ in
+                TGStorage.shared.info.water += 1
                 owner.setTamagotchi()
                 //refactor point: priv.tamagotchi를 Observable로 관리
                 tgInfo.accept(owner.priv.tamagotchi.info)
