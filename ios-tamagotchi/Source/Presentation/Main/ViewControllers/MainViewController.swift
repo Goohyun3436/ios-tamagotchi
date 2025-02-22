@@ -34,6 +34,7 @@ final class MainViewController: BaseViewController {
         let input = MainViewModel.Input(
             viewDidLoad: rx.viewDidLoad,
             viewWillAppear: rx.viewWillAppear,
+            viewWillDisappear: rx.viewWillDisappear,
             rightBarButtonTap: navigationItem.rightBarButtonItem?.rx.tap,
             riceText: mainView.riceForm.textField.rx.text,
             waterText: mainView.waterForm.textField.rx.text,
@@ -90,9 +91,10 @@ final class MainViewController: BaseViewController {
             }
             .disposed(by: disposeBag)
         
-        output.showsKeyboard
-            .bind(with: self) { owner, show in
-                owner.view.endEditing(show)
+        output.endEditing
+            .bind(with: self) { owner, force in
+                print(force)
+                owner.view.endEditing(force)
             }
             .disposed(by: disposeBag)
         
@@ -123,5 +125,17 @@ final class MainViewController: BaseViewController {
             self.view.transform = transform
         }
     }
+    
+//    private func alertError() {
+//        let alert = UIAlertController(title: "실패", message: "\(status.ko) (\(status.statusCode))", preferredStyle: .alert)
+//        
+//        let ok = UIAlertAction(title: "확인", style: .destructive)
+//        
+//        alert.addAction(ok)
+//        
+//        alert.overrideUserInterfaceStyle = UIUserInterfaceStyle.dark
+//        
+//        present(alert, animated: true)
+//    }
     
 }

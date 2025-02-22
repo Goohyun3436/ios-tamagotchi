@@ -16,6 +16,7 @@ final class MainViewModel: BaseViewModel {
     struct Input {
         let viewDidLoad: ControlEvent<Void>
         let viewWillAppear: ControlEvent<Bool>
+        let viewWillDisappear: ControlEvent<Bool>
         let rightBarButtonTap: ControlEvent<()>?
         let riceText: ControlProperty<String?>
         let waterText: ControlProperty<String?>
@@ -40,7 +41,7 @@ final class MainViewModel: BaseViewModel {
         let riceText: PublishRelay<String>
         let waterText: PublishRelay<String>
         let riceFormFocus: PublishRelay<Void>
-        let showsKeyboard: PublishRelay<Bool>
+        let endEditing: PublishRelay<Bool>
         let transformView: PublishRelay<(TimeInterval, CGAffineTransform)>
         let pushVC: PublishRelay<Void>
     }
@@ -69,7 +70,7 @@ final class MainViewModel: BaseViewModel {
         let riceText = PublishRelay<String>()
         let waterText = PublishRelay<String>()
         let riceFormFocus = PublishRelay<Void>()
-        let showsKeyboard = PublishRelay<Bool>()
+        let endEditing = PublishRelay<Bool>()
         let transformView = PublishRelay<(TimeInterval, CGAffineTransform)>()
         let pushVC = PublishRelay<Void>()
         
@@ -102,9 +103,15 @@ final class MainViewModel: BaseViewModel {
             .disposed(by: priv.disposeBag)
         
         input.viewWillAppear
-            .withUnretained(self)
-            .map { $0.0.updateBubble(for: .enterView) }
-            .bind(to: priv.bubbleText)
+            .debug("viewWillAppear")
+            .bind(with: self, onNext: { owner, _ in
+                owner.updateBubble(for: .enterView)
+                endEditing.accept(true)
+            })
+            .disposed(by: priv.disposeBag)
+        
+        input.viewWillDisappear
+            .bind(to: endEditing)
             .disposed(by: priv.disposeBag)
         
         input.rightBarButtonTap?
@@ -154,7 +161,7 @@ final class MainViewModel: BaseViewModel {
         input.mainViewTapOrSwipeDown
             .when(.recognized)
             .map { !$0.isEnabled }
-            .bind(to: showsKeyboard)
+            .bind(to: endEditing)
             .disposed(by: priv.disposeBag)
         
         input.mainViewSwipeUp
@@ -174,7 +181,7 @@ final class MainViewModel: BaseViewModel {
             riceText: riceText,
             waterText: waterText,
             riceFormFocus: riceFormFocus,
-            showsKeyboard: showsKeyboard,
+            endEditing: endEditing,
             transformView: transformView,
             pushVC: pushVC
         )
@@ -188,13 +195,13 @@ final class MainViewModel: BaseViewModel {
         self.priv.tamagotchi.accept(TGStaticStorage.info)
     }
     
-    private func updateBubble(for bubbleUpdate: BubbleUpdate) -> String {
-        return bubbleUpdate.message(nickname: priv.user.value.nickname)
+    private func updateBubble(for bubbleUpdate: BubbleUpdate) {
+        let text = bubbleUpdate.message(nickname: priv.user.value.nickname)
+        self.priv.bubbleText.accept(text)
     }
     
     private func updateFeed(for feedType: FeedType, input: String?) {
         var count: Int = 0
-        var bubbleText: String
         
         do {
             count = try feedType.validation(inputFeed: input)
@@ -206,14 +213,13 @@ final class MainViewModel: BaseViewModel {
         switch feedType {
         case .rice:
             TGStorage.shared.info.rice += count
-            bubbleText = self.updateBubble(for: .rice)
+            self.updateBubble(for: .rice)
         case .water:
             TGStorage.shared.info.water += count
-            bubbleText = self.updateBubble(for: .water)
+            self.updateBubble(for: .water)
         }
         
         self.setTamagotchi()
-        self.priv.bubbleText.accept(bubbleText)
     }
     
     private func viewUp() {
