@@ -33,6 +33,7 @@ final class MainViewController: BaseViewController {
         navigationItem.rightBarButtonItem = UIBarButtonItem()
         
         let input = MainViewModel.Input(
+            viewDidLoad: rx.viewDidLoad,
             viewWillAppear: rx.viewWillAppear,
             rightBarButtonTap: navigationItem.rightBarButtonItem?.rx.tap,
             riceButtonTap: mainView.riceForm.button.rx.tap,
@@ -55,6 +56,7 @@ final class MainViewController: BaseViewController {
             .disposed(by: disposeBag)
         
         output.tgImage
+            .debug("tgImage")
             .bind(with: self) { owner, image in
                 owner.mainView.tgThumbnailView.imageView.image = UIImage(named: image)
             }

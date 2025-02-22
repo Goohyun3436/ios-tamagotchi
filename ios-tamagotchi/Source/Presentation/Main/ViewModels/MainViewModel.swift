@@ -13,6 +13,7 @@ final class MainViewModel: BaseViewModel {
     
     //MARK: - Input
     struct Input {
+        let viewDidLoad: ControlEvent<Void>
         let viewWillAppear: ControlEvent<Bool>
         let rightBarButtonTap: ControlEvent<()>?
         let riceButtonTap: ControlEvent<Void>
@@ -24,9 +25,9 @@ final class MainViewModel: BaseViewModel {
         let navigationTitle: BehaviorRelay<String>
         let rightBarButtonImage: Observable<String>
         let bubbleText: PublishRelay<String>
-        let tgImage: BehaviorRelay<String>
-        let tgName: BehaviorRelay<String>
-        let tgInfo: BehaviorRelay<String>
+        let tgImage: PublishRelay<String>
+        let tgName: PublishRelay<String>
+        let tgInfo: PublishRelay<String>
         let pushVC: PublishRelay<Void>
     }
     
@@ -35,7 +36,7 @@ final class MainViewModel: BaseViewModel {
         var navigationTitle = ""
         let rightBarButtonImage = "person.circle"
         var user = User()
-        var tamagotchi = Tamagotchi()
+        var tamagotchi = PublishRelay<Tamagotchi>()
         let disposeBag = DisposeBag()
     }
     
@@ -45,7 +46,6 @@ final class MainViewModel: BaseViewModel {
     //MARK: - Initializer Method
     init() {
         setUser()
-        setTamagotchi()
         priv.navigationTitle = "\(priv.user.nickname)님의 다마고치"
     }
     
@@ -54,16 +54,29 @@ final class MainViewModel: BaseViewModel {
         let navigationTitle = BehaviorRelay(value: priv.navigationTitle)
         let rightBarButtonImage = Observable.just(priv.rightBarButtonImage)
         let bubbleText = PublishRelay<String>()
-        let tgImage = BehaviorRelay(value: priv.tamagotchi.image)
-        let tgName = BehaviorRelay(value: priv.tamagotchi.name)
-        let tgInfo = BehaviorRelay(value: priv.tamagotchi.info)
+        let tgImage = PublishRelay<String>()
+        let tgName = PublishRelay<String>()
+        let tgInfo = PublishRelay<String>()
         let pushVC = PublishRelay<Void>()
         
-        input.viewWillAppear
-            .bind(with: self) { owner, _ in
-                let text = owner.updateBubble(for: .enterView)
-                bubbleText.accept(text)
+        priv.tamagotchi
+            .bind(with: self) { owner, tamagotchi in
+                tgImage.accept(tamagotchi.image)
+                tgName.accept(tamagotchi.name)
+                tgInfo.accept(tamagotchi.info)
             }
+            .disposed(by: priv.disposeBag)
+        
+        input.viewDidLoad
+            .bind(with: self) { owner, _ in
+                owner.setTamagotchi()
+            }
+            .disposed(by: priv.disposeBag)
+        
+        input.viewWillAppear
+            .withUnretained(self)
+            .map { $0.0.updateBubble(for: .enterView) }
+            .bind(to: bubbleText)
             .disposed(by: priv.disposeBag)
         
         input.rightBarButtonTap?
@@ -74,9 +87,7 @@ final class MainViewModel: BaseViewModel {
             .bind(with: self) { owner, _ in
                 TGStorage.shared.info.rice += 1
                 
-                //refactor point: priv.tamagotchi를 Observable로 관리
                 owner.setTamagotchi()
-                tgInfo.accept(owner.priv.tamagotchi.info)
                 
                 let text = owner.updateBubble(for: .rice)
                 bubbleText.accept(text)
@@ -87,9 +98,7 @@ final class MainViewModel: BaseViewModel {
             .bind(with: self) { owner, _ in
                 TGStorage.shared.info.water += 1
                 
-                //refactor point: priv.tamagotchi를 Observable로 관리
                 owner.setTamagotchi()
-                tgInfo.accept(owner.priv.tamagotchi.info)
                 
                 let text = owner.updateBubble(for: .water)
                 bubbleText.accept(text)
@@ -112,7 +121,7 @@ final class MainViewModel: BaseViewModel {
     }
     
     private func setTamagotchi() {
-        priv.tamagotchi = TGStaticStorage.info
+        priv.tamagotchi.accept(TGStaticStorage.info)
     }
     
     private func updateBubble(for bubbleUpdate: BubbleUpdate) -> String {
