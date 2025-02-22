@@ -27,13 +27,8 @@ final class MainViewController: BaseViewController {
         super.viewDidLoad()
     }
     
-    deinit {
-        print(self, #function)
-    }
-    
     //MARK: - Setup Method    
     override func setupBind() {
-        print("setupBind")
         navigationItem.rightBarButtonItem = UIBarButtonItem()
         
         let input = MainViewModel.Input(
@@ -54,72 +49,60 @@ final class MainViewController: BaseViewController {
         let output = viewModel.transform(input: input)
         
         output.navigationTitle
-            .debug("navigationTitle")
             .bind(to: navigationItem.rx.title)
             .disposed(by: disposeBag)
         
         output.rightBarButtonImage
-            .debug("rightBarButtonImage")
             .bind(with: self) { owner, image in
                 owner.navigationItem.rightBarButtonItem?.image = UIImage(systemName: image)
             }
             .disposed(by: disposeBag)
         
         output.bubbleText
-            .debug("bubbleText")
             .bind(to: mainView.bubbleLabel.rx.text)
             .disposed(by: disposeBag)
         
         output.tgImage
-            .debug("tgImage")
             .bind(with: self) { owner, image in
                 owner.mainView.tgThumbnailView.imageView.image = UIImage(named: image)
             }
             .disposed(by: disposeBag)
         
         output.tgName
-            .debug("tgName")
             .bind(to: mainView.tgThumbnailView.nameLabel.rx.text)
             .disposed(by: disposeBag)
         
         output.tgInfo
-            .debug("tgInfo")
             .bind(to: mainView.tgInfoLabel.rx.text)
             .disposed(by: disposeBag)
         
         output.riceText
-            .debug("riceText")
             .bind(to: mainView.riceForm.textField.rx.text)
             .disposed(by: disposeBag)
         
         output.waterText
-            .debug("waterText")
             .bind(to: mainView.waterForm.textField.rx.text)
             .disposed(by: disposeBag)
         
         output.riceFormFocus
-            .debug("riceFormFocus")
             .bind(with: self) { owner, _ in
                 owner.mainView.riceForm.textField.becomeFirstResponder()
             }
             .disposed(by: disposeBag)
         
         output.showsKeyboard
-            .debug("showsKeyboard")
             .bind(with: self) { owner, show in
                 owner.view.endEditing(show)
             }
             .disposed(by: disposeBag)
         
         output.transformView
-            .debug("transformView")
             .bind(with: self) { owner, config in
                 owner.animationView(config)
             }
             .disposed(by: disposeBag)
         
         output.pushVC
-            .debug("pushVC")
             .bind(with: self) { owner, _ in
                 owner.moveToSetting()
             }
@@ -127,17 +110,10 @@ final class MainViewController: BaseViewController {
     }
     
     private func moveToSetting() {
-        
-        guard let scene = UIApplication.shared.connectedScenes.first as? UIWindowScene,
-              let window = scene.windows.first
-        else { return }
-
-        window.rootViewController = SettingViewController()
-        
-//        navigationController?.pushViewController(
-//            SettingViewController(),
-//            animated: true
-//        )
+        self.navigationController?.pushViewController(
+            SettingViewController(),
+            animated: true
+        )
     }
     
     private func animationView(_ config: (TimeInterval, CGAffineTransform)) {

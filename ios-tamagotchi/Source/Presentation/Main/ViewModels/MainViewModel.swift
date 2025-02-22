@@ -58,13 +58,8 @@ final class MainViewModel: BaseViewModel {
     //MARK: - Property
     private var priv = Private()
     
-    deinit {
-        print(self, #function)
-    }
-    
     //MARK: - Method
     func transform(input: Input) -> Output {
-        print("transform")
         let navigationTitle = PublishRelay<String>()
         let rightBarButtonImage = Observable.just(priv.rightBarButtonImage)
         let bubbleText = PublishRelay<String>()
@@ -79,13 +74,11 @@ final class MainViewModel: BaseViewModel {
         let pushVC = PublishRelay<Void>()
         
         priv.user
-            .debug("priv user")
             .map { "\($0.nickname)님의 다마고치" }
             .bind(to: navigationTitle)
             .disposed(by: priv.disposeBag)
         
         priv.tamagotchi
-            .debug("priv tamagotchi")
             .bind(with: self) { owner, tamagotchi in
                 tgImage.accept(tamagotchi.image)
                 tgName.accept(tamagotchi.name)
@@ -94,17 +87,14 @@ final class MainViewModel: BaseViewModel {
             .disposed(by: priv.disposeBag)
         
         priv.bubbleText
-            .debug("priv bubbleText")
             .bind(to: bubbleText)
             .disposed(by: priv.disposeBag)
         
         priv.transformView
-            .debug("priv transformView")
             .bind(to: transformView)
             .disposed(by: priv.disposeBag)
         
         input.viewDidLoad
-            .debug("viewDidLoad")
             .bind(with: self) { owner, _ in
                 owner.setUser()
                 owner.setTamagotchi()
@@ -112,19 +102,16 @@ final class MainViewModel: BaseViewModel {
             .disposed(by: priv.disposeBag)
         
         input.viewWillAppear
-            .debug("viewWillAppear")
             .withUnretained(self)
             .map { $0.0.updateBubble(for: .enterView) }
             .bind(to: priv.bubbleText)
             .disposed(by: priv.disposeBag)
         
         input.rightBarButtonTap?
-            .debug("rightBarButtonTap")
             .bind(to: pushVC)
             .disposed(by: priv.disposeBag)
         
         input.riceButtonTap
-            .debug("riceButtonTap")
             .withLatestFrom(input.riceText)
             .bind(with: self) { owner, text in
                 owner.updateFeed(for: .rice, input: text)
@@ -133,7 +120,6 @@ final class MainViewModel: BaseViewModel {
             .disposed(by: priv.disposeBag)
         
         input.waterButtonTap
-            .debug("waterButtonTap")
             .withLatestFrom(input.waterText)
             .bind(with: self) { owner, text in
                 owner.updateFeed(for: .water, input: text)
@@ -142,42 +128,36 @@ final class MainViewModel: BaseViewModel {
             .disposed(by: priv.disposeBag)
         
         input.riceDidBeginEditing
-            .debug("riceDidBeginEditing")
             .bind(with: self) { owner, _ in
                 owner.viewUp()
             }
             .disposed(by: priv.disposeBag)
         
         input.waterDidBeginEditing
-            .debug("waterDidBeginEditing")
             .bind(with: self) { owner, _ in
                 owner.viewUp()
             }
             .disposed(by: priv.disposeBag)
         
         input.riceDidEndEditing
-            .debug("riceDidEndEditing")
             .bind(with: self) { owner, _ in
                 owner.viewDown()
             }
             .disposed(by: priv.disposeBag)
         
         input.waterDidEndEditing
-            .debug("waterDidEndEditing")
             .bind(with: self) { owner, _ in
                 owner.viewDown()
             }
             .disposed(by: priv.disposeBag)
         
         input.mainViewTapOrSwipeDown
-            .debug("mainViewTapOrSwipeDown")
             .when(.recognized)
             .map { !$0.isEnabled }
             .bind(to: showsKeyboard)
             .disposed(by: priv.disposeBag)
         
         input.mainViewSwipeUp
-            .debug("mainViewSwipeUp")
             .when(.recognized)
             .bind(with: self, onNext: { owner, _ in
                 riceFormFocus.accept(())
@@ -213,15 +193,13 @@ final class MainViewModel: BaseViewModel {
     }
     
     private func updateFeed(for feedType: FeedType, input: String?) {
-        print(#function, input)
-        
         var count: Int = 0
         var bubbleText: String
         
         do {
             count = try feedType.validation(inputFeed: input)
         } catch {
-            print(error)
+            print(error) //alert
             return
         }
         
