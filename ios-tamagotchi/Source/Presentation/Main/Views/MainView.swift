@@ -41,7 +41,7 @@ final class MainView: BaseView {
         let bubbleWidth: Double = UIScreen.main.bounds.width * 0.6
         let bubbleHeight: Double = bubbleWidth * (71.0 / 111.0)
         let bubbleTailHeight: Double = bubbleHeight * 0.045
-        let bubbleInset: Double = 6
+        let bubbleInset: Double = 8
         
         let formHeight: Double = 34
         let formMargin: Double = 16

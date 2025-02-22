@@ -62,7 +62,6 @@ enum TamagotchiType: String, CaseIterable {
     }
     
     static func image(id: Int, level: Int) -> String {
-        print("image; \(id + 1)-\(level)")
         return "\(id + 1)-\(level)"
     }
     
