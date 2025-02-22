@@ -36,7 +36,8 @@ final class MainViewModel: BaseViewModel {
         var navigationTitle = ""
         let rightBarButtonImage = "person.circle"
         var user = User()
-        var tamagotchi = PublishRelay<Tamagotchi>()
+        let bubbleText = PublishRelay<String>()
+        let tamagotchi = PublishRelay<Tamagotchi>()
         let disposeBag = DisposeBag()
     }
     
@@ -59,6 +60,10 @@ final class MainViewModel: BaseViewModel {
         let tgInfo = PublishRelay<String>()
         let pushVC = PublishRelay<Void>()
         
+        priv.bubbleText
+            .bind(to: bubbleText)
+            .disposed(by: priv.disposeBag)
+        
         priv.tamagotchi
             .bind(with: self) { owner, tamagotchi in
                 tgImage.accept(tamagotchi.image)
@@ -76,7 +81,7 @@ final class MainViewModel: BaseViewModel {
         input.viewWillAppear
             .withUnretained(self)
             .map { $0.0.updateBubble(for: .enterView) }
-            .bind(to: bubbleText)
+            .bind(to: priv.bubbleText)
             .disposed(by: priv.disposeBag)
         
         input.rightBarButtonTap?
@@ -85,23 +90,13 @@ final class MainViewModel: BaseViewModel {
         
         input.riceButtonTap
             .bind(with: self) { owner, _ in
-                TGStorage.shared.info.rice += 1
-                
-                owner.setTamagotchi()
-                
-                let text = owner.updateBubble(for: .rice)
-                bubbleText.accept(text)
+                owner.updateFeed(for: .rice, count: 1)
             }
             .disposed(by: priv.disposeBag)
         
         input.waterButtonTap
             .bind(with: self) { owner, _ in
-                TGStorage.shared.info.water += 1
-                
-                owner.setTamagotchi()
-                
-                let text = owner.updateBubble(for: .water)
-                bubbleText.accept(text)
+                owner.updateFeed(for: .water, count: 1)
             }
             .disposed(by: priv.disposeBag)
         
@@ -126,6 +121,22 @@ final class MainViewModel: BaseViewModel {
     
     private func updateBubble(for bubbleUpdate: BubbleUpdate) -> String {
         return bubbleUpdate.message(nickname: priv.user.nickname)
+    }
+    
+    private func updateFeed(for feedType: FeedType, count: Int) {
+        var bubbleText: String
+        
+        switch feedType {
+        case .rice:
+            TGStorage.shared.info.rice += count
+            bubbleText = self.updateBubble(for: .rice)
+        case .water:
+            TGStorage.shared.info.water += count
+            bubbleText = self.updateBubble(for: .water)
+        }
+        
+        self.setTamagotchi()
+        self.priv.bubbleText.accept(bubbleText)
     }
     
 }

@@ -56,7 +56,6 @@ final class MainViewController: BaseViewController {
             .disposed(by: disposeBag)
         
         output.tgImage
-            .debug("tgImage")
             .bind(with: self) { owner, image in
                 owner.mainView.tgThumbnailView.imageView.image = UIImage(named: image)
             }
