@@ -37,6 +37,7 @@ final class MainViewController: BaseViewController {
             viewWillAppear: rx.viewWillAppear,
             rightBarButtonTap: navigationItem.rightBarButtonItem?.rx.tap,
             riceText: mainView.riceForm.textField.rx.text,
+            waterText: mainView.waterForm.textField.rx.text,
             riceButtonTap: mainView.riceForm.button.rx.tap,
             waterButtonTap: mainView.waterForm.button.rx.tap
         )
