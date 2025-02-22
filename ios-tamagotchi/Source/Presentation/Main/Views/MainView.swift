@@ -41,7 +41,7 @@ final class MainView: BaseView {
         let bubbleWidth: Double = UIScreen.main.bounds.width * 0.6
         let bubbleHeight: Double = bubbleWidth * (71.0 / 111.0)
         let bubbleTailHeight: Double = bubbleHeight * 0.045
-        let bubbleInset: Double = 4
+        let bubbleInset: Double = 6
         
         let formHeight: Double = 34
         let formMargin: Double = 16
@@ -92,6 +92,7 @@ final class MainView: BaseView {
     override func setupAttributes() {
         bubbleImageView.contentMode = .scaleAspectFit
         bubbleLabel.numberOfLines = 0
+        bubbleLabel.textAlignment = .center
         bubbleLabel.font = UIFont.systemFont(ofSize: 13, weight: .bold)
         tgInfoLabel.numberOfLines = 0
         tgInfoLabel.textAlignment = .center
