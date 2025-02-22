@@ -7,6 +7,8 @@
 
 import Foundation
 
+fileprivate let levelRange = [1, 10]
+
 enum TamagotchiType: String, CaseIterable {
     static var activeCases: [TamagotchiType] = TamagotchiType.allCases.dropLast()
     
@@ -83,8 +85,6 @@ enum TamagotchiType: String, CaseIterable {
         return index
     }
 }
-
-fileprivate let levelRange = [1, 10]
 
 struct Tamagotchi: Codable {
     var id: Int = TamagotchiType.empty.index

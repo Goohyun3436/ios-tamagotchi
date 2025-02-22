@@ -90,13 +90,13 @@ final class MainViewModel: BaseViewModel {
         
         input.riceButtonTap
             .bind(with: self) { owner, _ in
-                owner.updateFeed(for: .rice, count: 1)
+                owner.updateFeed(for: .rice, input: "1")
             }
             .disposed(by: priv.disposeBag)
         
         input.waterButtonTap
             .bind(with: self) { owner, _ in
-                owner.updateFeed(for: .water, count: 1)
+                owner.updateFeed(for: .water, input: "1")
             }
             .disposed(by: priv.disposeBag)
         
@@ -123,8 +123,18 @@ final class MainViewModel: BaseViewModel {
         return bubbleUpdate.message(nickname: priv.user.nickname)
     }
     
-    private func updateFeed(for feedType: FeedType, count: Int) {
+    private func updateFeed(for feedType: FeedType, input: String?) {
+        print(#function, input)
+        
+        var count: Int = 0
         var bubbleText: String
+        
+        do {
+            count = try feedType.validation(inputFeed: input)
+        } catch {
+            print(error)
+            return
+        }
         
         switch feedType {
         case .rice:

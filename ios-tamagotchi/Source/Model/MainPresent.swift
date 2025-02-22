@@ -7,6 +7,12 @@
 
 import Foundation
 
+enum FeedValidationError: Error {
+    case emptyString
+    case isNotInt
+    case outOfRange
+}
+
 enum FeedType: String {
     case rice = "밥"
     case water = "물"
@@ -26,6 +32,33 @@ enum FeedType: String {
     
     var buttonTitle: String {
         return " \(self.rawValue)먹기"
+    }
+    
+    var range: [Int] {
+        switch self {
+        case .rice:
+            return [1, 99]
+        case .water:
+            return [1, 49]
+        }
+    }
+    
+    func validation(inputFeed: String?) throws -> Int {
+        guard var inputFeed else {
+            throw FeedValidationError.emptyString //alert: 잘못된 입력
+        }
+        
+        if inputFeed.isEmpty { inputFeed = "1" }
+        
+        guard let count = Int(inputFeed) else {
+            throw FeedValidationError.isNotInt //alert: 숫자 입력
+        }
+        
+        guard count >= self.range[0] && count <= self.range[1] else {
+            throw FeedValidationError.outOfRange //alert: 범위밖
+        }
+        
+        return count
     }
 }
 
