@@ -8,6 +8,7 @@
 import Foundation
 import RxSwift
 import RxCocoa
+import RxGesture
 
 final class MainViewModel: BaseViewModel {
     
@@ -20,7 +21,7 @@ final class MainViewModel: BaseViewModel {
         let waterText: ControlProperty<String?>
         let riceButtonTap: ControlEvent<Void>
         let waterButtonTap: ControlEvent<Void>
-        let mainViewTap: 
+        let mainViewTapOrSwipe: ControlEvent<RxGestureRecognizer>
     }
     
     //MARK: - Output
@@ -31,6 +32,7 @@ final class MainViewModel: BaseViewModel {
         let tgImage: PublishRelay<String>
         let tgName: PublishRelay<String>
         let tgInfo: PublishRelay<String>
+        let showsKeyboard: PublishRelay<Bool>
         let pushVC: PublishRelay<Void>
     }
     
@@ -61,6 +63,7 @@ final class MainViewModel: BaseViewModel {
         let tgImage = PublishRelay<String>()
         let tgName = PublishRelay<String>()
         let tgInfo = PublishRelay<String>()
+        let showsKeyboard = PublishRelay<Bool>()
         let pushVC = PublishRelay<Void>()
         
         priv.bubbleText
@@ -105,6 +108,12 @@ final class MainViewModel: BaseViewModel {
             }
             .disposed(by: priv.disposeBag)
         
+        input.mainViewTapOrSwipe
+            .when(.recognized)
+            .map { !$0.isEnabled }
+            .bind(to: showsKeyboard)
+            .disposed(by: priv.disposeBag)
+        
         return Output(
             navigationTitle: navigationTitle,
             rightBarButtonImage: rightBarButtonImage,
@@ -112,6 +121,7 @@ final class MainViewModel: BaseViewModel {
             tgImage: tgImage,
             tgName: tgName,
             tgInfo: tgInfo,
+            showsKeyboard: showsKeyboard,
             pushVC: pushVC
         )
     }

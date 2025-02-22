@@ -8,6 +8,7 @@
 import UIKit
 import RxSwift
 import RxCocoa
+import RxGesture
 
 final class MainViewController: BaseViewController {
     
@@ -33,8 +34,6 @@ final class MainViewController: BaseViewController {
     
     override func setupBind() {
         navigationItem.rightBarButtonItem = UIBarButtonItem()
-        let singleTap = UITapGestureRecognizer()
-        mainView.addGestureRecognizer(singleTap)
         
         let input = MainViewModel.Input(
             viewDidLoad: rx.viewDidLoad,
@@ -43,12 +42,13 @@ final class MainViewController: BaseViewController {
             riceText: mainView.riceForm.textField.rx.text,
             waterText: mainView.waterForm.textField.rx.text,
             riceButtonTap: mainView.riceForm.button.rx.tap,
-            waterButtonTap: mainView.waterForm.button.rx.tap
+            waterButtonTap: mainView.waterForm.button.rx.tap,
+            mainViewTapOrSwipe: mainView.rx.anyGesture(.tap(
+                configuration: { rec, _ in
+                    rec.cancelsTouchesInView = false
+                }), .swipe(direction: .down))
         )
         let output = viewModel.transform(input: input)
-        
-        mainView.rx.gesture
-        let a = singleTap.rx.tap
         
         output.navigationTitle
             .bind(to: navigationItem.rx.title)
@@ -76,6 +76,12 @@ final class MainViewController: BaseViewController {
         
         output.tgInfo
             .bind(to: mainView.tgInfoLabel.rx.text)
+            .disposed(by: disposeBag)
+        
+        output.showsKeyboard
+            .bind(with: self) { owner, show in
+                owner.view.endEditing(show)
+            }
             .disposed(by: disposeBag)
         
         output.pushVC
