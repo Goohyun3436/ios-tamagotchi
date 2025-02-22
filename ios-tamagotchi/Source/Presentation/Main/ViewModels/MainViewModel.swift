@@ -86,9 +86,13 @@ final class MainViewModel: BaseViewModel {
         input.waterButtonTap
             .bind(with: self) { owner, _ in
                 TGStorage.shared.info.water += 1
-                owner.setTamagotchi()
+                
                 //refactor point: priv.tamagotchi를 Observable로 관리
+                owner.setTamagotchi()
                 tgInfo.accept(owner.priv.tamagotchi.info)
+                
+                let text = owner.updateBubble(for: .water)
+                bubbleText.accept(text)
             }
             .disposed(by: priv.disposeBag)
         
