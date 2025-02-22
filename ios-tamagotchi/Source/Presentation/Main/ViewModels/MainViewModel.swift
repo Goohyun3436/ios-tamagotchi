@@ -25,7 +25,8 @@ final class MainViewModel: BaseViewModel {
         let waterDidBeginEditing: ControlEvent<()>
         let riceDidEndEditing: ControlEvent<()>
         let waterDidEndEditing: ControlEvent<()>
-        let mainViewTapOrSwipe: ControlEvent<RxGestureRecognizer>
+        let mainViewTapOrSwipeDown: ControlEvent<RxGestureRecognizer>
+        let mainViewSwipeUp: ControlEvent<RxGestureRecognizer>
     }
     
     //MARK: - Output
@@ -38,6 +39,7 @@ final class MainViewModel: BaseViewModel {
         let tgInfo: PublishRelay<String>
         let riceText: PublishRelay<String>
         let waterText: PublishRelay<String>
+        let riceFormFocus: PublishRelay<Void>
         let showsKeyboard: PublishRelay<Bool>
         let transformView: PublishRelay<(TimeInterval, CGAffineTransform)>
         let pushVC: PublishRelay<Void>
@@ -66,6 +68,7 @@ final class MainViewModel: BaseViewModel {
         let tgInfo = PublishRelay<String>()
         let riceText = PublishRelay<String>()
         let waterText = PublishRelay<String>()
+        let riceFormFocus = PublishRelay<Void>()
         let showsKeyboard = PublishRelay<Bool>()
         let transformView = PublishRelay<(TimeInterval, CGAffineTransform)>()
         let pushVC = PublishRelay<Void>()
@@ -148,10 +151,17 @@ final class MainViewModel: BaseViewModel {
             }
             .disposed(by: priv.disposeBag)
         
-        input.mainViewTapOrSwipe
+        input.mainViewTapOrSwipeDown
             .when(.recognized)
             .map { !$0.isEnabled }
             .bind(to: showsKeyboard)
+            .disposed(by: priv.disposeBag)
+        
+        input.mainViewSwipeUp
+            .when(.recognized)
+            .bind(with: self, onNext: { owner, _ in
+                riceFormFocus.accept(())
+            })
             .disposed(by: priv.disposeBag)
         
         return Output(
@@ -163,6 +173,7 @@ final class MainViewModel: BaseViewModel {
             tgInfo: tgInfo,
             riceText: riceText,
             waterText: waterText,
+            riceFormFocus: riceFormFocus,
             showsKeyboard: showsKeyboard,
             transformView: transformView,
             pushVC: pushVC

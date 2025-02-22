@@ -45,7 +45,8 @@ final class MainViewController: BaseViewController {
             waterDidBeginEditing: mainView.waterForm.textField.rx.controlEvent(.editingDidBegin),
             riceDidEndEditing: mainView.riceForm.textField.rx.controlEvent(.editingDidEnd),
             waterDidEndEditing: mainView.waterForm.textField.rx.controlEvent(.editingDidEnd),
-            mainViewTapOrSwipe: mainView.rx.anyGesture(.tap(), .swipe(direction: .down))
+            mainViewTapOrSwipeDown: mainView.rx.anyGesture(.tap(), .swipe(direction: .down)),
+            mainViewSwipeUp: mainView.rx.anyGesture(.swipe(direction: .up))
         )
         let output = viewModel.transform(input: input)
         
@@ -83,6 +84,12 @@ final class MainViewController: BaseViewController {
         
         output.waterText
             .bind(to: mainView.waterForm.textField.rx.text)
+            .disposed(by: disposeBag)
+        
+        output.riceFormFocus
+            .bind(with: self) { owner, _ in
+                owner.mainView.riceForm.textField.becomeFirstResponder()
+            }
             .disposed(by: disposeBag)
         
         output.showsKeyboard
