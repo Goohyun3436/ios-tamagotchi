@@ -55,16 +55,24 @@ enum TamagotchiType: String, CaseIterable {
         }
     }
     
-    func image(exp: Int) -> String {
-        return "\(self.index + 1)-\(self.level(exp: exp))"
+    func image(exp: Double) -> String {
+        return "\(self.index + 1)-\(TamagotchiType.level(exp))"
     }
     
-    func level(exp: Int) -> Int {
-        guard 0 <= exp else { return 0 }
+    static func level(_ exp: Double) -> Int {
+        let updatedLevel = Int(exp / 10)
+        print(exp)
+        print(updatedLevel)
         
-        guard exp > 10 else { return 1 }
+        guard updatedLevel >= levelRange[0] else {
+            return levelRange[0]
+        }
         
-        return exp / 10
+        guard updatedLevel <= levelRange[1] else {
+            return levelRange[1]
+        }
+        
+        return updatedLevel
     }
     
     var index: Int {
@@ -88,17 +96,7 @@ struct Tamagotchi: Codable {
         return Double(rice) / 5 + Double(water) / 2
     }
     var level: Int {
-        let updatedLevel = Int(exp / 10)
-        
-        guard updatedLevel >= levelRange[0] else {
-            return levelRange[0]
-        }
-        
-        guard updatedLevel <= levelRange[1] else {
-            return levelRange[1]
-        }
-        
-        return updatedLevel
+        return TamagotchiType.level(exp)
     }
     var info: String {
         return "LV\(level) · 밥알 \(rice)개 · 물방울 \(water)개"

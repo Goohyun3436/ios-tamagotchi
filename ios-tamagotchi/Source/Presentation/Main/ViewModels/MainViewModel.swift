@@ -15,6 +15,7 @@ final class MainViewModel: BaseViewModel {
     struct Input {
         let viewWillAppear: ControlEvent<Bool>
         let rightBarButtonTap: ControlEvent<()>?
+        let riceButtonTap: ControlEvent<Void>
     }
     
     //MARK: - Output
@@ -42,8 +43,8 @@ final class MainViewModel: BaseViewModel {
     
     //MARK: - Initializer Method
     init() {
-        priv.user = getUser()
-        priv.tamagotchi = getTamagotchi()
+        setUser()
+        setTamagotchi()
         priv.navigationTitle = "\(priv.user.nickname)님의 다마고치"
     }
     
@@ -65,8 +66,15 @@ final class MainViewModel: BaseViewModel {
             .disposed(by: priv.disposeBag)
         
         input.rightBarButtonTap?
+            .bind(to: pushVC)
+            .disposed(by: priv.disposeBag)
+        
+        input.riceButtonTap
             .bind(with: self) { owner, _ in
-                pushVC.accept(())
+                TGStorage.shared.info.rice += 1
+                owner.setTamagotchi()
+                //refactor point: priv.tamagotchi를 Observable로 관리
+                tgInfo.accept(owner.priv.tamagotchi.info)
             }
             .disposed(by: priv.disposeBag)
         
@@ -81,12 +89,12 @@ final class MainViewModel: BaseViewModel {
         )
     }
     
-    private func getUser() -> User {
-        return UserStaticStorage.info
+    private func setUser() {
+        priv.user = UserStaticStorage.info
     }
     
-    private func getTamagotchi() -> Tamagotchi {
-        return TGStaticStorage.info
+    private func setTamagotchi() {
+        priv.tamagotchi = TGStaticStorage.info
     }
     
     private func updateBubble(for bubbleUpdate: BubbleUpdate) -> String {
