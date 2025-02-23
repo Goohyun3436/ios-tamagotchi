@@ -18,17 +18,14 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         // This delegate does not imply the connecting scene or session are new (see `application:configurationForConnectingSceneSession` instead).
         guard let scene = (scene as? UIWindowScene) else { return }
         
+        UserStorage.shared.load()
         TGStorage.shared.load()
         
         let isEmpty = TGStaticStorage.info.id == TamagotchiType.empty.index
+        let rootVC = isEmpty ? TGPickerViewController(viewModel: TGPickerViewModel(isOnboarding: true)) : MainViewController()
         
         window = UIWindow(windowScene: scene)
-        
-//        window?.rootViewController = UINavigationController(
-//            rootViewController: isEmpty ? TGPickerViewController() : MainViewController()
-//        )
-        
-        window?.rootViewController = UINavigationController(rootViewController: SettingViewController())
+        window?.rootViewController = UINavigationController(rootViewController: rootVC)
         
         window?.makeKeyAndVisible()
     }

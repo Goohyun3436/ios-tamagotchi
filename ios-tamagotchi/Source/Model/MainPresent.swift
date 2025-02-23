@@ -72,7 +72,7 @@ enum FeedType: String {
             throw FeedValidationError.isNotInt
         }
         
-        guard count >= self.range[0] && count <= self.range[1] else {
+        guard self.range[0] <= count && count <= self.range[1] else {
             throw FeedValidationError.outOfRange
         }
         

@@ -20,7 +20,6 @@ final class MainViewController: BaseViewController {
     //MARK: - Override Method
     override func loadView() {
         view = mainView
-        navigationItem.backButtonTitle = ""
     }
     
     override func viewDidLoad() {
@@ -103,24 +102,17 @@ final class MainViewController: BaseViewController {
             }
             .disposed(by: disposeBag)
         
-        output.error
-            .bind(with: self) { owner, error in
-                owner.alertError(error)
+        output.alert
+            .bind(with: self) { owner, alert in
+                owner.presentAlert(alert)
             }
             .disposed(by: disposeBag)
         
         output.pushVC
-            .bind(with: self) { owner, _ in
-                owner.moveToSetting()
+            .bind(with: self) { owner, vc in
+                owner.pushVC(vc)
             }
             .disposed(by: disposeBag)
-    }
-    
-    private func moveToSetting() {
-        self.navigationController?.pushViewController(
-            SettingViewController(),
-            animated: true
-        )
     }
     
     private func animationView(_ config: (TimeInterval, CGAffineTransform)) {
@@ -129,22 +121,6 @@ final class MainViewController: BaseViewController {
         UIView.animate(withDuration: duration) {
             self.view.transform = transform
         }
-    }
-    
-    private func alertError(_ error: FeedValidationError) {
-        let alert = UIAlertController(
-            title: error.title,
-            message: error.message,
-            preferredStyle: .alert
-        )
-        
-        let ok = UIAlertAction(title: "확인", style: .default)
-        
-        alert.addAction(ok)
-        
-        alert.overrideUserInterfaceStyle = UIUserInterfaceStyle.light
-        
-        present(alert, animated: true)
     }
     
 }

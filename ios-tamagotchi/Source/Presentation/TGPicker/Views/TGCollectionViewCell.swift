@@ -20,6 +20,10 @@ final class TGCollectionViewCell: BaseCollectionViewCell {
     func setData(info: TamagotchiThumbnail) {
         tgThumbnailView.imageView.image = UIImage(named: info.image)
         tgThumbnailView.nameLabel.text = info.name
+        
+        tgThumbnailView.imageView.layer.opacity = info.opacity
+        tgThumbnailView.nameLabel.layer.opacity = info.opacity
+        self.isUserInteractionEnabled = info.isEnabled
     }
     
     //MARK: - Setup Method

@@ -17,13 +17,11 @@ final class TGStorage {
     var info {
         didSet {
             TGStaticStorage.info = info
-            print("update", TGStaticStorage.info)
         }
     }
     
     func load() {
         TGStaticStorage.info = self.info
-        print("load", TGStaticStorage.info)
     }
     
 }

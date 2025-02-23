@@ -40,8 +40,9 @@ enum SettingMenuType: CaseIterable {
 }
 
 struct SettingMenu {
+    let type: SettingMenuType
     let icon: String
     let title: String
-    let detailText: String
+    var detailText: String
     let accessoryImage: String
 }

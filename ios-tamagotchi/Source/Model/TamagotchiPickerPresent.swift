@@ -12,4 +12,6 @@ struct TamagotchiThumbnail {
     let image: String
     let name: String
     let intro: String
+    var isEnabled: Bool = true
+    var opacity: Float = 1.0
 }

@@ -17,13 +17,11 @@ final class UserStorage {
     var info {
         didSet {
             UserStaticStorage.info = info
-            print("update", UserStaticStorage.info)
         }
     }
     
     func load() {
         UserStaticStorage.info = self.info
-        print("load", UserStaticStorage.info)
     }
     
 }

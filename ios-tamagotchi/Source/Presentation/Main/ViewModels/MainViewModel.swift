@@ -43,8 +43,8 @@ final class MainViewModel: BaseViewModel {
         let riceFormFocus: PublishRelay<Void>
         let endEditing: PublishRelay<Bool>
         let transformView: PublishRelay<(TimeInterval, CGAffineTransform)>
-        let error: PublishRelay<FeedValidationError>
-        let pushVC: PublishRelay<Void>
+        let alert: PublishRelay<AlertInfo>
+        let pushVC: PublishRelay<BaseViewController>
     }
     
     //MARK: - Private
@@ -74,8 +74,8 @@ final class MainViewModel: BaseViewModel {
         let riceFormFocus = PublishRelay<Void>()
         let endEditing = PublishRelay<Bool>()
         let transformView = PublishRelay<(TimeInterval, CGAffineTransform)>()
-        let error = PublishRelay<FeedValidationError>()
-        let pushVC = PublishRelay<Void>()
+        let alert = PublishRelay<AlertInfo>()
+        let pushVC = PublishRelay<BaseViewController>()
         
         priv.user
             .map { "\($0.nickname)님의 다마고치" }
@@ -99,7 +99,8 @@ final class MainViewModel: BaseViewModel {
             .disposed(by: priv.disposeBag)
         
         priv.error
-            .bind(to: error)
+            .map { AlertInfo(title: $0.title, message: $0.message) }
+            .bind(to: alert)
             .disposed(by: priv.disposeBag)
         
         input.viewDidLoad
@@ -111,6 +112,8 @@ final class MainViewModel: BaseViewModel {
         
         input.viewWillAppear
             .bind(with: self, onNext: { owner, _ in
+                owner.setUser()
+                owner.setTamagotchi()
                 owner.updateBubble(for: .enterView)
                 endEditing.accept(true)
             })
@@ -121,7 +124,9 @@ final class MainViewModel: BaseViewModel {
             .disposed(by: priv.disposeBag)
         
         input.rightBarButtonTap?
-            .bind(to: pushVC)
+            .bind(with: self, onNext: { owner, _ in
+                pushVC.accept(SettingViewController())
+            })
             .disposed(by: priv.disposeBag)
         
         input.riceButtonTap
@@ -189,7 +194,7 @@ final class MainViewModel: BaseViewModel {
             riceFormFocus: riceFormFocus,
             endEditing: endEditing,
             transformView: transformView,
-            error: error,
+            alert: alert,
             pushVC: pushVC
         )
     }

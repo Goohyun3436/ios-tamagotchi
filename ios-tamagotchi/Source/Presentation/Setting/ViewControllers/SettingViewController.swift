@@ -27,7 +27,9 @@ final class SettingViewController: BaseViewController {
     
     //MARK: - Setup Method
     override func setupBind() {
-        let input = SettingViewModel.Input()
+        let input = SettingViewModel.Input(
+            menuTap: mainView.tableView.rx.modelSelected(SettingMenu.self)
+        )
         let output = viewModel.transform(input: input)
         
         output.navigationTitle
@@ -44,6 +46,24 @@ final class SettingViewController: BaseViewController {
                     cell.setData(element)
                 }
             )
+            .disposed(by: disposeBag)
+        
+        output.resignAlert
+            .bind(with: self, onNext: { owner, alert in
+                owner.presentAlertWithCancel(alert)
+            })
+            .disposed(by: disposeBag)
+        
+        output.pushVC
+            .bind(with: self) { owner, vc in
+                owner.pushVC(vc)
+            }
+            .disposed(by: disposeBag)
+        
+        output.rootVC
+            .bind(with: self) { owner, vc in
+                owner.rootVC(vc)
+            }
             .disposed(by: disposeBag)
     }
     

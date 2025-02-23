@@ -13,13 +13,13 @@ class TGPickerModalViewController: BaseViewController {
     
     //MARK: - Property
     private let mainView = TGPickerModalView()
-    private let viewModel = TGPickerModalViewModel()
+    private let viewModel: TGPickerModalViewModel
     private let disposeBag = DisposeBag()
     
     //MARK: - Initializer Method
-    init(tamagotchi: TamagotchiThumbnail) {
+    init(viewModel: TGPickerModalViewModel) {
+        self.viewModel = viewModel
         super.init(nibName: nil, bundle: nil)
-        setupBind(tamagotchi)
     }
     
     //MARK: - Override Method
@@ -32,11 +32,10 @@ class TGPickerModalViewController: BaseViewController {
     }
     
     //MARK: - Setup Method
-    private func setupBind(_ tamagotchi: TamagotchiThumbnail) {
+    override func setupBind() {
         let input = TGPickerModalViewModel.Input(
-            tamagotchi: tamagotchi,
             cancelButtonTap: mainView.cancelButton.rx.tap,
-            startButtonTap: mainView.startButton.rx.tap
+            submitButtonTap: mainView.submitButton.rx.tap
         )
         let output = viewModel.transform(input: input)
         
@@ -58,29 +57,21 @@ class TGPickerModalViewController: BaseViewController {
             .bind(to: mainView.cancelButton.rx.title())
             .disposed(by: disposeBag)
         
-        output.startButtonTitle
-            .bind(to: mainView.startButton.rx.title())
+        output.submitButtonTitle
+            .bind(to: mainView.submitButton.rx.title())
             .disposed(by: disposeBag)
         
         output.dismissVC
             .bind(with: self) { owner, _ in
-                owner.dismiss(animated: true)
+                owner.dismissVC()
             }
             .disposed(by: disposeBag)
         
-        output.pushVC
-            .bind(with: self) { owner, _ in
-                owner.moveToMain()
+        output.rootVC
+            .bind(with: self) { owner, vc in
+                owner.rootVC(vc)
             }
             .disposed(by: disposeBag)
-    }
-    
-    private func moveToMain() {
-        guard let scene = UIApplication.shared.connectedScenes.first as? UIWindowScene,
-              let window = scene.windows.first
-        else { return }
-
-        window.rootViewController = MainViewController()
     }
     
 }

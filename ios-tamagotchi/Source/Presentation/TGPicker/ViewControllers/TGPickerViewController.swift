@@ -13,8 +13,14 @@ class TGPickerViewController: BaseViewController {
     
     //MARK: - Property
     private let mainView = TGPickerView()
-    private let viewModel = TGPickerViewModel()
+    private let viewModel: TGPickerViewModel
     private let disposeBag = DisposeBag()
+    
+    //MARK: - Initializer Method
+    init(viewModel: TGPickerViewModel) {
+        self.viewModel = viewModel
+        super.init(nibName: nil, bundle: nil)
+    }
     
     //MARK: - Override Method
     override func loadView() {
@@ -48,19 +54,17 @@ class TGPickerViewController: BaseViewController {
             )
             .disposed(by: disposeBag)
         
-        output.presentVC
-            .bind(with: self) { owner, tamagotchi in
-                owner.presentModal(tamagotchi)
+        output.popVC
+            .bind(with: self) { owner, _ in
+                owner.popVC()
             }
             .disposed(by: disposeBag)
-    }
-    
-    private func presentModal(_ tamagotchi: TamagotchiThumbnail) {
-        let vc = TGPickerModalViewController(
-            tamagotchi: tamagotchi
-        )
-        vc.modalPresentationStyle = .overCurrentContext
-        present(vc, animated: true)
+        
+        output.presentVC
+            .bind(with: self) { owner, vc in
+                owner.presentVC(vc)
+            }
+            .disposed(by: disposeBag)
     }
     
 }

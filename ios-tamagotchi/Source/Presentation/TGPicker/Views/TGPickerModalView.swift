@@ -17,7 +17,7 @@ final class TGPickerModalView: BaseView {
     let introLabel = UILabel()
     private let buttonWrap = UIStackView()
     let cancelButton = UIButton()
-    let startButton = UIButton()
+    let submitButton = UIButton()
     
     //MARK: - Setup Method
     override func setupUI() {
@@ -27,7 +27,7 @@ final class TGPickerModalView: BaseView {
             wrap.addSubview($0)
         }
         
-        [cancelButton, startButton].forEach {
+        [cancelButton, submitButton].forEach {
             buttonWrap.addArrangedSubview($0)
         }
     }
@@ -80,9 +80,9 @@ final class TGPickerModalView: BaseView {
         cancelButton.backgroundColor = AppColor.tertiaryBackground
         cancelButton.setTitleColor(AppColor.label, for: .normal)
         cancelButton.titleLabel?.font = UIFont.systemFont(ofSize: 14, weight: .semibold)
-        startButton.backgroundColor = AppColor.backgroundColor
-        startButton.setTitleColor(AppColor.label, for: .normal)
-        startButton.titleLabel?.font = UIFont.systemFont(ofSize: 14, weight: .semibold)
+        submitButton.backgroundColor = AppColor.backgroundColor
+        submitButton.setTitleColor(AppColor.label, for: .normal)
+        submitButton.titleLabel?.font = UIFont.systemFont(ofSize: 14, weight: .semibold)
     }
     
 }

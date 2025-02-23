@@ -25,13 +25,11 @@ class BorderTextField: UITextField {
         self.textColor = AppColor.label
         
         DispatchQueue.main.async {
-            print("test")
             self.setupBorderBottom()
         }
     }
     
     private func setupBorderBottom(borderWidth: CGFloat = 1.0) {
-        print(self.frame)
         guard self.frame.width != 0.0 && self.frame.height != 0.0 else { return }
         
         let bottomBorder = CALayer()
