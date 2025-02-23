@@ -19,11 +19,6 @@ final class MainView: BaseView {
     let riceForm = FeedFormView(feedType: .rice)
     let waterForm = FeedFormView(feedType: .water)
     
-    override func layoutSubviews() {
-        riceForm.textField.setupBorderBottom(borderWidth: 1)
-        waterForm.textField.setupBorderBottom(borderWidth: 1)
-    }
-    
     //MARK: - Setup Method
     override func setupUI() {
         bubbleImageView.addSubview(bubbleLabel)

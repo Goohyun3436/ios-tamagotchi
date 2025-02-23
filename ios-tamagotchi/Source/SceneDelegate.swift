@@ -24,9 +24,11 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         
         window = UIWindow(windowScene: scene)
         
-        window?.rootViewController = UINavigationController(
-            rootViewController: isEmpty ? TGPickerViewController() : MainViewController()
-        )
+//        window?.rootViewController = UINavigationController(
+//            rootViewController: isEmpty ? TGPickerViewController() : MainViewController()
+//        )
+        
+        window?.rootViewController = UINavigationController(rootViewController: SettingViewController())
         
         window?.makeKeyAndVisible()
     }

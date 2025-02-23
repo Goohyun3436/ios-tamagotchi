@@ -32,14 +32,16 @@ final class AppAppearance {
         UINavigationBar.appearance().scrollEdgeAppearance = appearanceN
         
         UIBarButtonItem.appearance().tintColor = AppColor.label
+        UIBarButtonItem.appearance().setTitleTextAttributes([.font: UIFont.systemFont(ofSize: 15, weight: .medium)], for: .normal)
         
         BaseView.appearance().backgroundColor = AppColor.backgroundColor
         
         UILabel.appearance().textColor = AppColor.label
         
         UITableView.appearance().bounces = false
-        UITableView.appearance().separatorStyle = .none
         UITableView.appearance().backgroundColor = AppColor.backgroundColor
+        UITableView.appearance().separatorColor = AppColor.label
+        UITableViewCell.appearance().backgroundColor = AppColor.backgroundColor
         
         UICollectionView.appearance().bounces = false
         UICollectionView.appearance().backgroundColor = AppColor.backgroundColor
