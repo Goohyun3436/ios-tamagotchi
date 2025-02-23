@@ -11,10 +11,10 @@ import SnapKit
 final class MainView: BaseView {
     
     //MARK: - UI Property
-    let bubbleImageView = UIImageView()
+    let bubbleImageView = UIImageView(image: UIImage(named: "bubble"))
     let bubbleLabel = UILabel()
     let tgThumbnailView = TGThumbnailView()
-    let tgExpLabel = UILabel()
+    let tgInfoLabel = UILabel()
     private let formWrap = UIStackView()
     let riceForm = FeedFormView(feedType: .rice)
     let waterForm = FeedFormView(feedType: .water)
@@ -32,7 +32,7 @@ final class MainView: BaseView {
             formWrap.addArrangedSubview($0)
         }
         
-        [bubbleImageView, tgThumbnailView, tgExpLabel, formWrap].forEach {
+        [bubbleImageView, tgThumbnailView, tgInfoLabel, formWrap].forEach {
             addSubview($0)
         }
     }
@@ -41,7 +41,7 @@ final class MainView: BaseView {
         let bubbleWidth: Double = UIScreen.main.bounds.width * 0.6
         let bubbleHeight: Double = bubbleWidth * (71.0 / 111.0)
         let bubbleTailHeight: Double = bubbleHeight * 0.045
-        let bubbleInset: Double = 4
+        let bubbleInset: Double = 8
         
         let formHeight: Double = 34
         let formMargin: Double = 16
@@ -67,13 +67,13 @@ final class MainView: BaseView {
             make.width.equalTo(bubbleWidth)
         }
         
-        tgExpLabel.snp.makeConstraints { make in
+        tgInfoLabel.snp.makeConstraints { make in
             make.top.equalTo(tgThumbnailView.snp.bottom).offset(16)
             make.horizontalEdges.equalToSuperview().inset(16)
         }
         
         formWrap.snp.makeConstraints { make in
-            make.top.equalTo(tgExpLabel.snp.bottom).offset(30)
+            make.top.equalTo(tgInfoLabel.snp.bottom).offset(30)
             make.centerX.equalToSuperview()
             make.width.equalTo(bubbleWidth)
             make.height.equalTo(formHeight * 2 + formMargin)
@@ -92,10 +92,11 @@ final class MainView: BaseView {
     override func setupAttributes() {
         bubbleImageView.contentMode = .scaleAspectFit
         bubbleLabel.numberOfLines = 0
+        bubbleLabel.textAlignment = .center
         bubbleLabel.font = UIFont.systemFont(ofSize: 13, weight: .bold)
-        tgExpLabel.numberOfLines = 0
-        tgExpLabel.textAlignment = .center
-        tgExpLabel.font = UIFont.systemFont(ofSize: 13, weight: .bold)
+        tgInfoLabel.numberOfLines = 0
+        tgInfoLabel.textAlignment = .center
+        tgInfoLabel.font = UIFont.systemFont(ofSize: 13, weight: .bold)
     }
     
 }

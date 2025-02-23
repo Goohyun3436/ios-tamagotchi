@@ -7,6 +7,8 @@
 
 import Foundation
 
+fileprivate let levelRange = [1, 10]
+
 enum TamagotchiType: String, CaseIterable {
     static var activeCases: [TamagotchiType] = TamagotchiType.allCases.dropLast()
     
@@ -55,16 +57,26 @@ enum TamagotchiType: String, CaseIterable {
         }
     }
     
-    func image(exp: Int) -> String {
-        return "\(self.index + 1)-\(self.level(exp: exp))"
+    func image(exp: Double) -> String {
+        return "\(self.index + 1)-\(TamagotchiType.level(exp))"
     }
     
-    func level(exp: Int) -> Int {
-        guard 0 <= exp else { return 0 }
+    static func image(id: Int, level: Int) -> String {
+        return "\(id + 1)-\(level)"
+    }
+    
+    static func level(_ exp: Double) -> Int {
+        let updatedLevel = Int(exp / 10)
         
-        guard exp > 10 else { return 1 }
+        guard updatedLevel >= levelRange[0] else {
+            return levelRange[0]
+        }
         
-        return exp / 10
+        guard updatedLevel <= levelRange[1] else {
+            return levelRange[1]
+        }
+        
+        return updatedLevel
     }
     
     var index: Int {
@@ -78,9 +90,21 @@ enum TamagotchiType: String, CaseIterable {
 
 struct Tamagotchi: Codable {
     var id: Int = TamagotchiType.empty.index
-    var rice: Int = 0
-    var water: Int = 0
-    var exp: Int {
-        return rice / 5 + water / 2
+    var image: String = ""
+    var name: String = ""
+    var rice: Int = 0 { didSet { self.updateLevel() } }
+    var water: Int = 0 { didSet { self.updateLevel() } }
+    var level: Int = 0
+    
+    var exp: Double {
+        return Double(rice) / 5 + Double(water) / 2
+    }
+    var info: String {
+        return "LV\(level) · 밥알 \(rice)개 · 물방울 \(water)개"
+    }
+    
+    mutating func updateLevel() {
+        self.level = TamagotchiType.level(exp)
+        self.image = TamagotchiType.image(id: self.id, level: self.level)
     }
 }

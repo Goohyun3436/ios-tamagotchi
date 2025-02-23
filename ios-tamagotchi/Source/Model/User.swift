@@ -8,5 +8,5 @@
 import Foundation
 
 struct User: Codable {
-    var nickname: String = "대장님"
+    var nickname: String = "대장"
 }
